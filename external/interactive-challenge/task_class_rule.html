@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduBridge Task - E3</title>
+
+    <style>
+        .task-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .hero h1 {
+            font-size: 2rem;
+        }
+    </style>
+
+    <link rel="stylesheet" href="css/detail.css">
+    <link rel="stylesheet" href="css/tasks/E3.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="nav-bar">
+            <button class="back-btn" onclick="location.href='index.html'">⬅️ 메인으로</button>
+            <div style="color:white; font-size: 1.2rem;">ID: E3</div>
+        </div>
+
+        <div class="hero" id="hero-section" style="padding: 20px;">
+            <h1 id="task-title">Loading...</h1>
+            <p id="task-desc">...</p>
+        </div>
+
+        <div class="task-container">
+            <div class="task-header">
+                <h3>🎯 미션 목표</h3>
+                <p id="mission-goal">...</p>
+            </div>
+
+            <div class="task-content" id="task-stage"
+                style="min-height: 300px; background: white; border-radius: 8px; padding: 20px; color: black;">
+                <!-- Engine renders here -->
+            </div>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="check-btn" onclick="engine.checkAnswer()">✅ 정답 확인</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/data/levels/E3_levels.js"></script>
+
+    <div id="success-msg"
+        style="display:none; position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#4CAF50; color:white; padding:15px 30px; border-radius:20px; animation: popUp 0.5s;">
+        정답입니다! 다음 레벨로 넘어갑니다.
+    </div>
+    <script src="js/tasks/E3.js"></script>
+</body>
+
+</html>

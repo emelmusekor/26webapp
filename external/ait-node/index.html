@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 노드 스튜디오 - 차세대 인공지능 창작 플랫폼</title>
+  
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <style>
+    @keyframes pulse-signal { 0% { filter: drop-shadow(0 0 4px #fff); transform: scale(1); } 50% { filter: drop-shadow(0 0 15px #fff); transform: scale(1.5); } 100% { filter: drop-shadow(0 0 4px #fff); transform: scale(1); } }
+    .signal-dot { animation: pulse-signal 0.8s infinite; }
+    
+    .bg-grid {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    }
+    
+    .no-select { user-select: none; -webkit-user-select: none; }
+    
+    /* 핀 연결을 쉽게 하기 위한 투명 확장 영역 */
+    .pin-hitbox {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      top: -6px;
+      left: -6px;
+      border-radius: 50%;
+      cursor: crosshair;
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans h-screen overflow-hidden flex flex-col no-select">
+  <div id="root" class="h-full flex flex-col"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useCallback } = React;
+
+    // --- 수동 SVG 아이콘 ---
+    const Icon = ({ children, className }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>{children}</svg>
+    );
+    const IcCamera = (p) => <Icon {...p}><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></Icon>;
+    const IcMic = (p) => <Icon {...p}><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></Icon>;
+    const IcBrain = (p) => <Icon {...p}><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13h4.5a2 2 0 0 1 1.96 1.6l.54 2.8a2 2 0 0 1-2 2.4"/><path d="M22 17.5h-2"/><path d="M9 13H4.5A2 2 0 0 0 2.54 14.6l-.54 2.8A2 2 0 0 0 4 19.8"/><path d="M2 17.5h2"/><path d="M12 5v14"/></Icon>;
+    const IcCpu = (p) => <Icon {...p}><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></Icon>;
+    const IcVolume = (p) => <Icon {...p}><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></Icon>;
+    const IcMonitor = (p) => <Icon {...p}><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></Icon>;
+    const IcPlay = (p) => <Icon {...p}><polygon points="5 3 19 12 5 21 5 3"/></Icon>;
+    const IcSquare = (p) => <Icon {...p}><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></Icon>;
+    const IcTrash = (p) => <Icon {...p}><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></Icon>;
+
+    // --- 노드 속성 정의 ---
+    const NODE_TYPES = {
+      camera: { category: 'sensor', name: '웹캠 (시각 입력)', icon: IcCamera, color: 'emerald', inputs: [], outputs: [{ id: 'img_out', label: '영상 데이터' }] },
+      mic: { category: 'sensor', name: '마이크 (청각 입력)', icon: IcMic, color: 'emerald', inputs: [], outputs: [{ id: 'audio_out', label: '소리 데이터' }] },
+      
+      visionModel: { category: 'ai', name: '비전 AI 모델', icon: IcBrain, color: 'purple', inputs: [{ id: 'img_in', label: '영상 입력' }], outputs: [{ id: 'class_out', label: '분석 결과' }],
+        defaultConfig: { classes: [{name: '사과', samples: []}, {name: '배경', samples: []}] }
+      },
+      
+      ifLogic: { category: 'logic', name: '조건문 (만약 ~라면)', icon: IcCpu, color: 'yellow', inputs: [{ id: 'val_in', label: '분석 결과 입력' }], outputs: [{ id: 'true_out', label: '맞을 때' }, { id: 'false_out', label: '틀릴 때' }],
+        defaultConfig: { targetValue: '사과' }
+      },
+      
+      displayOut: { category: 'action', name: '화면 출력', icon: IcMonitor, color: 'blue', inputs: [{ id: 'trigger_in', label: '실행 신호' }], outputs: [],
+        defaultConfig: { text: '사과가 인식되었습니다!' }
+      },
+      ttsOut: { category: 'action', name: '스피커 (음성 출력)', icon: IcVolume, color: 'blue', inputs: [{ id: 'trigger_in', label: '실행 신호' }], outputs: [],
+        defaultConfig: { text: '사과가 나타났어요.' }
+      }
+    };
+
+    const COLORS = {
+      emerald: { border: 'border-emerald-500', bg: 'bg-emerald-900/60', text: 'text-emerald-400', header: 'bg-emerald-600' },
+      purple: { border: 'border-purple-500', bg: 'bg-purple-900/60', text: 'text-purple-400', header: 'bg-purple-600' },
+      yellow: { border: 'border-yellow-500', bg: 'bg-yellow-900/60', text: 'text-yellow-400', header: 'bg-yellow-600' },
+      blue: { border: 'border-blue-500', bg: 'bg-blue-900/60', text: 'text-blue-400', header: 'bg-blue-600' }
+    };
+
+    function AINodeStudio() {
+      // 상태 관리
+      const [nodes, setNodes] = useState([]);
+      const [wires, setWires] = useState([]);
+      const [connectingPin, setConnectingPin] = useState(null);
+      const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+      const [draggingNode, setDraggingNode] = useState(null);
+      const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+      
+      const [isRunning, setIsRunning] = useState(false);
+      const [signals, setSignals] = useState([]);
+      const [monitorLog, setMonitorLog] = useState("");
+      
+      // 권한 에러 상태 및 가상 데이터 스위치
+      const [mediaError, setMediaError] = useState(null);
+      const [mockSignal, setMockSignal] = useState('A'); // 'A' or 'B' (가상 입력 스위치)
+
+      // 참조
+      const canvasRef = useRef(null);
+      const streamRef = useRef(null);
+      const videoRef = useRef(null);
+      const extractCanvasRef = useRef(null);
+      const audioCtxRef = useRef(null);
+      const analyserRef = useRef(null);
+      const executionLoopRef = useRef(null);
+      const lastSpokenRef = useRef(0);
+
+      // --- 1. 미디어 장치 연결 (강화된 예외 처리) ---
+      const initMedia = useCallback(async () => {
+        try {
+          if (streamRef.current) {
+            streamRef.current.getTracks().forEach(t => t.stop());
+          }
+
+          const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 224, height: 224 }, audio: true });
+          streamRef.current = stream;
+          setMediaError(null);
+          setMonitorLog("시스템 준비됨 (카메라/마이크 연결 성공)");
+          
+          const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          const analyser = audioCtx.createAnalyser();
+          analyser.fftSize = 64;
+          const source = audioCtx.createMediaStreamSource(stream);
+          source.connect(analyser);
+          audioCtxRef.current = audioCtx;
+          analyserRef.current = analyser;
+
+          if (!videoRef.current) {
+            const video = document.createElement('video');
+            video.srcObject = stream;
+            video.autoplay = true;
+            video.muted = true;
+            videoRef.current = video;
+          } else {
+            videoRef.current.srcObject = stream;
+          }
+        } catch (e) {
+          console.error("미디어 권한 에러:", e);
+          const isLocal = window.location.protocol === 'file:';
+          let errMsg = isLocal 
+            ? "보안 정책 차단: HTML 파일을 로컬에서 직접 열면 카메라를 켤 수 없습니다. (웹에 호스팅 필요)"
+            : "시스템 설정에서 카메라/마이크 접근 권한을 허용해주세요.";
+          
+          setMediaError(errMsg);
+          setMonitorLog(errMsg);
+        }
+      }, []);
+
+      useEffect(() => {
+        initMedia();
+        return () => {
+          if (streamRef.current) streamRef.current.getTracks().forEach(t => t.stop());
+        };
+      }, [initMedia]);
+
+      useEffect(() => {
+        if (videoRef.current && streamRef.current && videoRef.current.srcObject !== streamRef.current) {
+          videoRef.current.srcObject = streamRef.current;
+        }
+      });
+
+      // --- 2. 특징 추출 (가상 데이터 지원) ---
+      const extractFeatures = useCallback((type) => {
+        // 권한 에러 시 선택된 스위치(A/B)에 따라 서로 다른 일관된 가상 패턴 생성 (KNN 학습 가능하도록)
+        if (mediaError || !streamRef.current) {
+          if (type === 'camera') {
+             return Array.from({length: 768}, (_, i) => mockSignal === 'A' ? (i % 3 === 0 ? 255 : 0) : (i % 3 === 2 ? 255 : 0));
+          }
+          if (type === 'mic') {
+             return Array.from({length: 32}, () => mockSignal === 'A' ? 255 : 0);
+          }
+          return null;
+        }
+
+        if (type === 'camera' && videoRef.current) {
+          if (!extractCanvasRef.current) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 16; canvas.height = 16;
+            extractCanvasRef.current = canvas;
+          }
+          const ctx = extractCanvasRef.current.getContext('2d');
+          ctx.drawImage(videoRef.current, 0, 0, 16, 16);
+          const data = ctx.getImageData(0, 0, 16, 16).data;
+          const features = [];
+          for (let i = 0; i < data.length; i += 4) features.push(data[i], data[i+1], data[i+2]);
+          return features;
+        } 
+        else if (type === 'mic' && analyserRef.current) {
+          const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount);
+          analyserRef.current.getByteFrequencyData(dataArray);
+          return Array.from(dataArray);
+        }
+        return null;
+      }, [mediaError, mockSignal]);
+
+      // --- 3. 노드 UI 로직 ---
+      const addNode = (typeId) => {
+        const typeDef = NODE_TYPES[typeId];
+        const newNode = {
+          id: `node_${Date.now()}_${Math.floor(Math.random()*1000)}`,
+          type: typeId,
+          x: 100 + (nodes.length * 40) % 300,
+          y: 100 + (nodes.length * 40) % 300,
+          config: JSON.parse(JSON.stringify(typeDef.defaultConfig || {}))
+        };
+        setNodes([...nodes, newNode]);
+      };
+
+      const removeNode = (id) => {
+        setNodes(nodes.filter(n => n.id !== id));
+        setWires(wires.filter(w => w.fromNode !== id && w.toNode !== id));
+      };
+
+      const handleCanvasMouseMove = (e) => {
+        if (!canvasRef.current) return;
+        const rect = canvasRef.current.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        setMousePos({ x, y });
+
+        if (draggingNode) {
+          setNodes(prev => prev.map(n => n.id === draggingNode ? { ...n, x: x - dragOffset.x, y: y - dragOffset.y } : n));
+        }
+      };
+
+      const handleCanvasMouseUp = () => {
+        setDraggingNode(null);
+      };
+
+      const startWire = (e, nodeId, pinId, type) => {
+        e.stopPropagation();
+        const rect = e.currentTarget.getBoundingClientRect();
+        const canvasRect = canvasRef.current.getBoundingClientRect();
+        setConnectingPin({ 
+          nodeId, pinId, type, 
+          x: rect.left + rect.width/2 - canvasRect.left, 
+          y: rect.top + rect.height/2 - canvasRect.top 
+        });
+      };
+
+      const endWire = (e, targetNodeId, targetPinId, targetType) => {
+        e.stopPropagation();
+        if (connectingPin && connectingPin.nodeId !== targetNodeId && connectingPin.type !== targetType) {
+          const from = connectingPin.type === 'output' ? connectingPin : { nodeId: targetNodeId, pinId: targetPinId };
+          const to = connectingPin.type === 'input' ? connectingPin : { nodeId: targetNodeId, pinId: targetPinId };
+          
+          if (!wires.some(w => w.fromNode === from.nodeId && w.fromPin === from.pinId && w.toNode === to.nodeId && w.toPin === to.pinId)) {
+            setWires(prev => [...prev, { id: `wire_${Date.now()}`, fromNode: from.nodeId, fromPin: from.pinId, toNode: to.nodeId, toPin: to.pinId }]);
+          }
+        }
+        setConnectingPin(null);
+      };
+
+      const updateConfig = (nodeId, key, value) => {
+        setNodes(prev => prev.map(n => n.id === nodeId ? { ...n, config: { ...n.config, [key]: value } } : n));
+      };
+
+      const trainModel = (nodeId, classIndex) => {
+        const node = nodes.find(n => n.id === nodeId);
+        const wireIn = wires.find(w => w.toNode === nodeId);
+        const sensorType = wireIn ? nodes.find(n => n.id === wireIn.fromNode)?.type : 'camera';
+        
+        const features = extractFeatures(sensorType);
+        if (features) {
+          setNodes(prev => prev.map(n => {
+            if (n.id !== nodeId) return n;
+            const newClasses = [...n.config.classes];
+            newClasses[classIndex].samples.push(features);
+            return { ...n, config: { ...n.config, classes: newClasses } };
+          }));
+        }
+      };
+
+      // --- 4. 진짜 AI 실행 엔진 (KNN) ---
+      useEffect(() => {
+        if (!isRunning) {
+          clearInterval(executionLoopRef.current);
+          setMonitorLog(mediaError ? "권한 차단됨: 스위치를 통한 가상 테스트 모드 대기 중" : "시스템 준비됨");
+          return;
+        }
+
+        executionLoopRef.current = setInterval(() => {
+          let hasActivity = false;
+          let currentLog = "";
+
+          const modelNodes = nodes.filter(n => n.type === 'visionModel' || n.type === 'emotionModel');
+          
+          modelNodes.forEach(model => {
+            const wireIn = wires.find(w => w.toNode === model.id);
+            if (!wireIn) return;
+            const sensor = nodes.find(n => n.id === wireIn.fromNode);
+            if (!sensor) return;
+
+            const features = extractFeatures(sensor.type);
+            if (!features) return;
+
+            let bestClass = null;
+            let minDistance = Infinity;
+            
+            setSignals(s => [...s, { id: Date.now(), wireId: wireIn.id, fromType: 'sensor', progress: 0 }]);
+
+            model.config.classes.forEach(c => {
+              c.samples.forEach(sample => {
+                let dist = 0;
+                for (let i = 0; i < features.length; i++) dist += Math.pow(features[i] - sample[i], 2);
+                if (dist < minDistance) { minDistance = dist; bestClass = c.name; }
+              });
+            });
+
+            if (bestClass) {
+              currentLog = mediaError ? `[가상 분석] 패턴 ${mockSignal} -> ${bestClass}` : `[분석완료] ${bestClass} 인식됨`;
+              hasActivity = true;
+
+              const outWires = wires.filter(w => w.fromNode === model.id);
+              outWires.forEach(wireOut => {
+                setSignals(s => [...s, { id: Date.now()+1, wireId: wireOut.id, fromType: 'ai', progress: 0 }]);
+                
+                const nextNode = nodes.find(n => n.id === wireOut.toNode);
+                if (nextNode && nextNode.type === 'ifLogic') {
+                  const isMatch = (bestClass === nextNode.config.targetValue);
+                  const activePin = isMatch ? 'true_out' : 'false_out';
+                  
+                  const actionWires = wires.filter(w => w.fromNode === nextNode.id && w.fromPin === activePin);
+                  actionWires.forEach(actWire => {
+                    setSignals(s => [...s, { id: Date.now()+2, wireId: actWire.id, fromType: 'logic', progress: 0 }]);
+                    
+                    const actionNode = nodes.find(n => n.id === actWire.toNode);
+                    if (actionNode) {
+                      const now = Date.now();
+                      if (now - lastSpokenRef.current > 3000) {
+                        if (actionNode.type === 'ttsOut') {
+                          const u = new SpeechSynthesisUtterance(actionNode.config.text);
+                          u.lang = 'ko-KR';
+                          window.speechSynthesis.speak(u);
+                          setMonitorLog(`[스피커 출력] 🔊 "${actionNode.config.text}"`);
+                        } else if (actionNode.type === 'displayOut') {
+                          setMonitorLog(`[화면 출력] 💻 "${actionNode.config.text}"`);
+                        }
+                        lastSpokenRef.current = now;
+                      }
+                    }
+                  });
+                }
+              });
+            }
+          });
+
+          if (!hasActivity) setMonitorLog(mediaError ? "가상 모드 작동 중..." : "대기 중... (카메라/마이크 연결 및 학습 데이터를 확인하세요)");
+
+        }, 1500);
+
+        return () => clearInterval(executionLoopRef.current);
+      }, [isRunning, nodes, wires, extractFeatures, mediaError, mockSignal]);
+
+      // 시그널 애니메이션
+      useEffect(() => {
+        if (signals.length === 0) return;
+        let animationFrameId;
+        
+        const animate = () => {
+          setSignals(prev => prev.map(s => ({ ...s, progress: s.progress + 0.03 })).filter(s => s.progress < 1));
+          animationFrameId = requestAnimationFrame(animate);
+        };
+        animationFrameId = requestAnimationFrame(animate);
+        return () => cancelAnimationFrame(animationFrameId);
+      }, [signals.length]);
+
+      // 렌더링 헬퍼
+      const getPinCoords = (nodeId, pinId, type) => {
+        const node = nodes.find(n => n.id === nodeId);
+        if (!node) return { x: 0, y: 0 };
+        const NODE_WIDTH = 260;
+        const typeInfo = NODE_TYPES[node.type];
+        const isInput = type === 'input';
+        const pinIndex = isInput ? typeInfo.inputs.findIndex(p => p.id === pinId) : typeInfo.outputs.findIndex(p => p.id === pinId);
+        
+        let yOffset = 70 + (pinIndex * 35); 
+        if (!isInput && typeInfo.inputs.length > 0) yOffset += (typeInfo.inputs.length * 35);
+        if (!isInput && typeInfo.hasConfig) yOffset += 60;
+        if (node.type === 'visionModel') yOffset = isInput ? 70 : 180;
+        
+        return { x: isInput ? node.x : node.x + NODE_WIDTH, y: node.y + yOffset };
+      };
+
+      return (
+        <div className="flex flex-col h-screen">
+          {/* 헤더 */}
+          <header className="bg-slate-800 border-b border-slate-700 px-6 py-4 flex items-center justify-between z-20 shadow-md">
+            <div className="flex items-center space-x-3">
+              <div className="bg-blue-600 p-2 rounded-xl"><IcBrain className="w-6 h-6 text-white" /></div>
+              <h1 className="text-xl font-black tracking-tight text-white">AI 노드 스튜디오 <span className="text-sm font-normal text-slate-400 ml-2">Drag & Drop으로 실제 AI 설계하기</span></h1>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className={`text-sm font-bold bg-slate-900 px-4 py-2 rounded-lg border max-w-sm truncate ${mediaError ? 'border-rose-500 text-rose-400' : 'border-slate-700 text-emerald-400'}`}>
+                {monitorLog}
+              </div>
+              <button onClick={() => { setNodes([]); setWires([]); setSignals([]); }} className="text-slate-400 hover:text-rose-400 transition flex items-center text-sm font-bold"><IcTrash className="w-4 h-4 mr-1"/> 모두 지우기</button>
+              <button 
+                onClick={() => setIsRunning(!isRunning)}
+                className={`flex items-center space-x-2 px-6 py-2.5 rounded-full font-black text-sm transition-all shadow-[0_0_15px_rgba(0,0,0,0.3)] ${
+                  isRunning ? 'bg-rose-500 hover:bg-rose-600 text-white animate-pulse' : 'bg-emerald-500 hover:bg-emerald-400 text-slate-900'
+                }`}
+              >
+                {isRunning ? <><IcSquare className="w-4 h-4" /> <span>시스템 정지</span></> : <><IcPlay className="w-4 h-4" /> <span>실제 AI 가동</span></>}
+              </button>
+            </div>
+          </header>
+
+          <div className="flex flex-1 overflow-hidden relative">
+            
+            {/* 좌측 팔레트 */}
+            <aside className="w-72 bg-slate-800 border-r border-slate-700 p-4 flex flex-col gap-6 z-20 overflow-y-auto shadow-xl">
+              {['sensor', 'ai', 'logic', 'action'].map((cat, i) => (
+                <div key={cat}>
+                  <h3 className="text-xs font-bold text-slate-500 uppercase mb-2">{i+1}. {cat === 'sensor' ? '데이터 입력' : cat === 'ai' ? '인공지능 모델' : cat === 'logic' ? '논리 조건' : '에이전트 행동'}</h3>
+                  <div className="flex flex-col gap-2">
+                    {Object.entries(NODE_TYPES).filter(([_, t]) => t.category === cat).map(([id, t]) => (
+                      <button key={id} onClick={() => addNode(id)} className={`flex items-center p-3 rounded-xl bg-slate-900 border border-${t.color}-500/30 hover:border-${t.color}-500 hover:bg-${t.color}-900/20 transition group text-left`}>
+                        <t.icon className={`w-5 h-5 text-${t.color}-400 mr-3`} />
+                        <span className={`text-sm font-bold text-slate-300 group-hover:text-${t.color}-400`}>{t.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              <div className="mt-auto bg-slate-900 p-4 rounded-xl border border-slate-700 text-xs text-slate-400 leading-relaxed">
+                💡 <strong>사용 방법</strong><br/>1. 노드를 꺼내 <strong>핀(동그라미)을 드래그하여</strong> 연결하세요.<br/>2. AI 모델 노드에서 [학습] 버튼을 눌러 데이터를 수집하세요.<br/>3. 상단의 [실제 AI 가동] 버튼을 누르세요.
+              </div>
+            </aside>
+
+            {/* 중앙 캔버스 */}
+            <main 
+              ref={canvasRef}
+              className="flex-1 bg-slate-900 bg-grid relative overflow-hidden"
+              onMouseMove={handleCanvasMouseMove}
+              onMouseUp={() => { handleCanvasMouseUp(); setConnectingPin(null); }}
+              onMouseLeave={() => { handleCanvasMouseUp(); setConnectingPin(null); }}
+            >
+              
+              {/* 노드 렌더링 */}
+              {nodes.map(node => {
+                const typeInfo = NODE_TYPES[node.type];
+                const styles = COLORS[typeInfo.color];
+                
+                return (
+                  <div 
+                    key={node.id}
+                    className={`absolute w-[260px] rounded-xl border-2 shadow-2xl flex flex-col overflow-hidden transition-shadow select-none
+                      ${styles.border} ${styles.bg} backdrop-blur-md
+                      ${draggingNode === node.id ? 'shadow-[0_0_30px_rgba(255,255,255,0.2)] z-10' : 'z-0'}
+                    `}
+                    style={{ left: node.x, top: node.y }}
+                  >
+                    {/* 노드 헤더 */}
+                    <div 
+                      className={`${styles.header} px-3 py-2 flex items-center justify-between cursor-move`}
+                      onMouseDown={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        const canvasRect = canvasRef.current.getBoundingClientRect();
+                        setDragOffset({ x: e.clientX - canvasRect.left - node.x, y: e.clientY - canvasRect.top - node.y });
+                        setDraggingNode(node.id);
+                      }}
+                    >
+                      <div className="flex items-center">
+                        <typeInfo.icon className="w-4 h-4 text-white mr-2" />
+                        <span className="text-sm font-black text-white">{typeInfo.name}</span>
+                      </div>
+                      <button onClick={(e) => { e.stopPropagation(); removeNode(node.id); }} className="text-white/50 hover:text-white"><IcTrash className="w-3 h-3" /></button>
+                    </div>
+
+                    {/* 노드 바디 */}
+                    <div className="p-3 flex flex-col gap-2 relative">
+                      
+                      {/* 입력 핀 */}
+                      {typeInfo.inputs.length > 0 && (
+                        <div className="flex flex-col gap-3">
+                          {typeInfo.inputs.map(pin => (
+                            <div key={pin.id} className="flex items-center text-xs text-slate-300 font-bold relative">
+                              <div className="absolute -left-5 w-4 h-4 rounded-full bg-slate-700 border-2 border-slate-400">
+                                <div 
+                                  className="pin-hitbox hover:bg-white/50"
+                                  onMouseDown={(e) => startWire(e, node.id, pin.id, 'input')}
+                                  onMouseUp={(e) => endWire(e, node.id, pin.id, 'input')}
+                                ></div>
+                              </div>
+                              <span className="ml-2">{pin.label}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* 커스텀 UI: 비전 AI 모델 (학습 기능) */}
+                      {node.type === 'visionModel' && (
+                        <div className="bg-slate-900 border border-slate-700 rounded-lg p-2 mt-2 space-y-2">
+                          {node.config.classes.map((c, idx) => (
+                            <div key={idx} className="flex items-center justify-between gap-2">
+                              <input 
+                                type="text" value={c.name}
+                                onChange={(e) => {
+                                  const newClasses = [...node.config.classes];
+                                  newClasses[idx].name = e.target.value;
+                                  updateConfig(node.id, 'classes', newClasses);
+                                }}
+                                className="w-16 bg-transparent border-b border-slate-600 text-xs text-white outline-none"
+                              />
+                              <button 
+                                onPointerDown={(e) => { e.currentTarget.interval = setInterval(() => trainModel(node.id, idx), 100); }}
+                                onPointerUp={(e) => clearInterval(e.currentTarget.interval)}
+                                onPointerLeave={(e) => clearInterval(e.currentTarget.interval)}
+                                className="flex-1 bg-purple-600 hover:bg-purple-500 text-white text-[10px] font-bold py-1 px-2 rounded active:scale-95 touch-none select-none"
+                              >
+                                길게 눌러 학습
+                              </button>
+                              <span className="text-xs font-bold text-purple-300 w-6 text-right">{c.samples.length}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* 커스텀 UI: IF 조건문 */}
+                      {node.type === 'ifLogic' && (
+                        <div className="mt-2 bg-slate-900 p-2 rounded border border-yellow-500/30 flex items-center">
+                          <span className="text-xs font-bold text-yellow-500 mr-2">IF ==</span>
+                          <input 
+                            type="text" value={node.config.targetValue} onChange={(e) => updateConfig(node.id, 'targetValue', e.target.value)}
+                            className="flex-1 bg-transparent border-b border-slate-600 text-xs text-white outline-none no-select"
+                            onMouseDown={e => e.stopPropagation()}
+                          />
+                        </div>
+                      )}
+
+                      {/* 커스텀 UI: 액션 출력값 */}
+                      {(node.type === 'ttsOut' || node.type === 'displayOut') && (
+                        <div className="mt-2">
+                          <input 
+                            type="text" value={node.config.text} onChange={(e) => updateConfig(node.id, 'text', e.target.value)}
+                            className="w-full bg-slate-900 border border-slate-600 rounded p-1.5 text-xs text-white focus:border-blue-500 outline-none no-select"
+                            onMouseDown={e => e.stopPropagation()}
+                          />
+                        </div>
+                      )}
+
+                      {/* 특수 UI: 웹캠 프리뷰 에러 핸들링 및 가상 데이터 스위치 포함 */}
+                      {node.type === 'camera' && (
+                        <div className="mt-2 w-full aspect-video bg-black rounded overflow-hidden border border-slate-700 relative">
+                          <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover transform scale-x-[-1]" />
+                          {mediaError && (
+                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/90 p-2 text-center z-10">
+                              <span className="text-rose-400 text-[11px] font-bold mb-1">카메라 권한 차단됨</span>
+                              
+                              {/* 가상 데이터 스위치 컨트롤 */}
+                              <div className="bg-slate-800 border border-slate-600 rounded p-1 mb-2 mt-1">
+                                <span className="text-[10px] text-slate-400 block mb-1">가상 데이터 입력 스위치</span>
+                                <div className="flex space-x-1">
+                                  <button 
+                                    onMouseDown={(e) => { e.stopPropagation(); setMockSignal('A'); }}
+                                    className={`text-[10px] px-3 py-1 rounded font-bold ${mockSignal === 'A' ? 'bg-emerald-500 text-slate-900' : 'bg-slate-700 text-white'}`}
+                                  >패턴 A</button>
+                                  <button 
+                                    onMouseDown={(e) => { e.stopPropagation(); setMockSignal('B'); }}
+                                    className={`text-[10px] px-3 py-1 rounded font-bold ${mockSignal === 'B' ? 'bg-purple-500 text-white' : 'bg-slate-700 text-white'}`}
+                                  >패턴 B</button>
+                                </div>
+                              </div>
+
+                              <button 
+                                onMouseDown={(e) => { e.stopPropagation(); initMedia(); }}
+                                className="text-slate-400 underline text-[10px]"
+                              >
+                                실제 카메라 재연결 시도
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* 특수 UI: 마이크 권한 에러 핸들링 및 가상 스위치 포함 */}
+                      {node.type === 'mic' && mediaError && (
+                         <div className="mt-2 bg-slate-900 border border-rose-500/50 rounded p-2 flex flex-col items-center justify-center text-center relative z-20">
+                            <span className="text-rose-400 text-[10px] font-bold mb-2">마이크 권한 차단됨</span>
+                            <div className="flex space-x-1 mb-2">
+                                <button onMouseDown={(e) => { e.stopPropagation(); setMockSignal('A'); }} className={`text-[10px] px-2 py-1 rounded ${mockSignal === 'A' ? 'bg-emerald-500 text-slate-900' : 'bg-slate-700 text-white'}`}>소리 A</button>
+                                <button onMouseDown={(e) => { e.stopPropagation(); setMockSignal('B'); }} className={`text-[10px] px-2 py-1 rounded ${mockSignal === 'B' ? 'bg-purple-500 text-white' : 'bg-slate-700 text-white'}`}>소리 B</button>
+                            </div>
+                            <button onMouseDown={(e) => { e.stopPropagation(); initMedia(); }} className="text-slate-400 underline text-[10px]">재연결</button>
+                         </div>
+                      )}
+
+                      {/* 출력 핀 */}
+                      {typeInfo.outputs.length > 0 && (
+                        <div className="flex flex-col gap-3 mt-auto pt-3">
+                          {typeInfo.outputs.map(pin => (
+                            <div key={pin.id} className="flex items-center justify-end text-xs text-slate-300 font-bold relative">
+                              <span className="mr-2">{pin.label}</span>
+                              <div className={`absolute -right-5 w-4 h-4 rounded-full border-2 bg-slate-700 border-slate-400`}>
+                                <div 
+                                  className="pin-hitbox hover:bg-white/50"
+                                  onMouseDown={(e) => startWire(e, node.id, pin.id, 'output')}
+                                  onMouseUp={(e) => endWire(e, node.id, pin.id, 'output')}
+                                ></div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+
+              {/* 와이어 (SVG) 렌더링 */}
+              <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
+                {wires.map(wire => {
+                  const start = getPinCoords(wire.fromNode, wire.fromPin, 'output');
+                  const end = getPinCoords(wire.toNode, wire.toPin, 'input');
+                  const pathData = `M ${start.x} ${start.y} C ${start.x + 80} ${start.y}, ${end.x - 80} ${end.y}, ${end.x} ${end.y}`;
+                  
+                  return (
+                    <g key={wire.id}>
+                      <path d={pathData} fill="none" stroke="#334155" strokeWidth="6" strokeLinecap="round" />
+                      <path d={pathData} fill="none" stroke="#94a3b8" strokeWidth="3" strokeLinecap="round" className={isRunning ? 'opacity-50' : ''} />
+                    </g>
+                  );
+                })}
+
+                {/* 연결 중인 임시 선 */}
+                {connectingPin && (
+                  <path 
+                    d={`M ${connectingPin.x} ${connectingPin.y} C ${connectingPin.x + 80} ${connectingPin.y}, ${mousePos.x - 80} ${mousePos.y}, ${mousePos.x} ${mousePos.y}`}
+                    fill="none" stroke="#60a5fa" strokeWidth="4" strokeDasharray="5,5" className="animate-pulse"
+                  />
+                )}
+
+                {/* 데이터 신호(애니메이션) 렌더링 */}
+                {signals.map(sig => {
+                  const wire = wires.find(w => w.id === sig.wireId);
+                  if (!wire) return null;
+                  const start = getPinCoords(wire.fromNode, wire.fromPin, 'output');
+                  const end = getPinCoords(wire.toNode, wire.toPin, 'input');
+                  
+                  const t = sig.progress;
+                  const p0 = start; const p1 = { x: start.x + 80, y: start.y }; const p2 = { x: end.x - 80, y: end.y }; const p3 = end;
+                  const cx = 3 * (p1.x - p0.x); const bx = 3 * (p2.x - p1.x) - cx; const ax = p3.x - p0.x - cx - bx;
+                  const cy = 3 * (p1.y - p0.y); const by = 3 * (p2.y - p1.y) - cy; const ay = p3.y - p0.y - cy - by;
+                  const x = (ax * Math.pow(t, 3)) + (bx * Math.pow(t, 2)) + (cx * t) + p0.x;
+                  const y = (ay * Math.pow(t, 3)) + (by * Math.pow(t, 2)) + (cy * t) + p0.y;
+
+                  let colorClass = "fill-white";
+                  if (sig.fromType === 'sensor') colorClass = "fill-emerald-400";
+                  else if (sig.fromType === 'ai') colorClass = "fill-purple-400";
+                  else colorClass = "fill-yellow-400";
+
+                  return <circle key={sig.id} cx={x} cy={y} r="6" className={`signal-dot ${colorClass}`} />;
+                })}
+              </svg>
+            </main>
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<AINodeStudio />);
+  </script>
+</body>
+</html>

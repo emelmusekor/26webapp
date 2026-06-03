@@ -1,0 +1,23 @@
+/* A2 Galaxy Zoo */
+#task-stage {
+    background: #fdf2e9;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+h3 {
+    margin: 5px 0;
+    color: #444;
+}
+
+button {
+    transition: all 0.2s;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background: white;
+}
+
+button:hover {
+    background: #f0f0f0;
+    transform: translateY(-2px);
+}

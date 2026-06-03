@@ -1,0 +1,22 @@
+# Local runtime files
+node_modules/
+**/node_modules/
+
+# Nested source-control metadata copied from legacy projects
+**/.git/
+external/legacy-sources/
+external/ai-paradigm-game/
+
+# Local archive folder. Keep only old/README.md in version control.
+old/*
+!old/README.md
+
+# Local review artifacts
+screenshots/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+**/.vscode/

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>스파이 비버의 통신 장치 (버전 2.1)</title>
+    <style>
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h1 { color: #333; margin-bottom: 10px; }
+        .description { margin-bottom: 20px; text-align: center; color: #555; }
+        
+        /* 메인 컨테이너 */
+        .container {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* 왼쪽: 규칙 표 영역 */
+        .rule-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        table {
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        th, td {
+            width: 80px;
+            height: 80px;
+            border: 1px solid #ddd;
+            position: relative;
+        }
+
+        /* 헤더 스타일 */
+        th { font-weight: bold; background-color: #eee; }
+        .th-red { color: #e74c3c; background-color: #fadbd8; }
+        .th-green { color: #27ae60; background-color: #d5f5e3; }
+        .th-blue { color: #2980b9; background-color: #d4e6f1; }
+        .th-white { color: #7f8c8d; background-color: #f4f6f7; border: 2px solid #ddd;}
+
+        /* 현재 상태 하이라이트 (수정됨: 초기에는 적용 안 함) */
+        .active-row {
+            box-shadow: inset 0 0 0 4px #f1c40f; /* 노란색 테두리 강조 */
+            background-color: #fff9c4 !important;
+            transition: all 0.3s ease;
+        }
+
+        /* 드래그 가능한 타일 */
+        .token {
+            width: 60px;
+            height: 60px;
+            background-color: #34495e;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 auto;
+            cursor: grab;
+            transition: transform 0.2s;
+            user-select: none;
+        }
+
+        .token:active { cursor: grabbing; transform: scale(1.1); }
+        .token.empty { background-color: transparent; color: #ccc; cursor: default; }
+
+        /* 오른쪽: 시뮬레이터 컨트롤 영역 */
+        .control-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .status-display {
+            font-size: 18px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .current-color-box {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-left: 5px;
+            vertical-align: middle;
+            border: 1px solid #ccc;
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            width: 100%;
+        }
+
+        button {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            color: white;
+        }
+
+        button:hover { opacity: 0.9; }
+        button:disabled { background-color: #ccc !important; cursor: not-allowed; }
+
+        .btn-red { background-color: #e74c3c; }
+        .btn-green { background-color: #27ae60; }
+        .btn-blue { background-color: #2980b9; }
+        .btn-white { background-color: #ecf0f1; color: #333; border: 1px solid #bdc3c7; }
+        
+        .btn-reset { 
+            background-color: #95a5a6; 
+            margin-top: 10px; 
+            width: 100%;
+        }
+
+        .output-screen {
+            background-color: #2c3e50;
+            color: #2ecc71; /* 터미널 그린 */
+            font-family: 'Courier New', monospace;
+            width: 100%;
+            height: 60px;
+            margin-top: 20px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            letter-spacing: 5px;
+        }
+
+        .log-area {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 10px;
+            height: 100px;
+            overflow-y: auto;
+            width: 100%;
+            background: #f9f9f9;
+            padding: 5px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🕵️ 스파이 비버 통신 장치</h1>
+    <div class="description">
+        검은색 알파벳 타일을 드래그하여 서로 위치를 바꿀 수 있습니다.<br>
+        <strong>미션:</strong> "STAR"와 "TRAP"을 모두 전송할 수 있도록 규칙을 수정하세요!
+    </div>
+
+    <div class="container">
+        <div class="rule-panel">
+            <table>
+                <thead>
+                    <tr>
+                        <th>출발 \ 도착</th>
+                        <th class="th-red">Red</th>
+                        <th class="th-green">Green</th>
+                        <th class="th-blue">Blue</th>
+                        <th class="th-white">White</th>
+                    </tr>
+                </thead>
+                <tbody id="ruleTableBody">
+                    </tbody>
+            </table>
+        </div>
+
+        <div class="control-panel">
+            <div class="status-display">
+                현재 상태: <span id="currentStateText" style="color:#e74c3c;">Red</span>
+                <span id="currentColorBox" class="current-color-box" style="background-color: #e74c3c;"></span>
+            </div>
+
+            <div class="output-screen" id="outputMessage"></div>
+            
+            <div class="log-area" id="logArea">기계가 대기 중입니다... (시작 상태: Red)</div>
+
+            <div style="margin-top: 15px; width: 100%; text-align: center; margin-bottom: 5px; font-size: 14px; color:#555;">다음 색깔 선택</div>
+            <div class="btn-group">
+                <button class="btn-red" onclick="moveTo('Red')">Red</button>
+                <button class="btn-green" onclick="moveTo('Green')">Green</button>
+                <button class="btn-blue" onclick="moveTo('Blue')">Blue</button>
+                <button class="btn-white" onclick="moveTo('White')">White</button>
+            </div>
+            
+            <button class="btn-reset" onclick="resetSimulation()">🔁 처음 상태(Red)로 리셋</button>
+        </div>
+    </div>
+
+<script>
+    // 초기 데이터 (고장난 상태)
+    const initialData = {
+        'Red':   { 'Red': '-', 'Green': 'S', 'Blue': 'T', 'White': 'A' },
+        'Green': { 'Red': 'E', 'Green': '-', 'Blue': 'T', 'White': 'P' },
+        'Blue':  { 'Red': 'R', 'Green': 'E', 'Blue': '-', 'White': 'P' }, // 문제: P -> A여야 함
+        'White': { 'Red': 'R', 'Green': 'S', 'Blue': 'A', 'White': '-' }  // 문제: A -> P여야 함
+    };
+
+    let currentState = 'Red';
+    let outputString = "";
+    const colors = ['Red', 'Green', 'Blue', 'White'];
+    const colorCodes = {
+        'Red': '#e74c3c', 'Green': '#27ae60', 'Blue': '#2980b9', 'White': '#ffffff'
+    };
+
+    let draggedItem = null;
+
+    // 초기화
+    window.onload = function() {
+        renderTable();
+        updateStatusUI();
+        // 초기 상태 하이라이트 함수 호출 제거
+        // highlightActiveRow(); <--- 이 부분을 삭제했습니다.
+    };
+
+    // 테이블 렌더링 함수
+    function renderTable() {
+        const tbody = document.getElementById('ruleTableBody');
+        tbody.innerHTML = '';
+
+        colors.forEach(rowColor => {
+            const tr = document.createElement('tr');
+            tr.id = `row-${rowColor}`;
+            // 초기 상태 하이라이트 클래스 추가 제거
+            // if(rowColor === currentState) tr.classList.add('active-row'); <--- 삭제됨
+
+            const th = document.createElement('th');
+            th.textContent = rowColor;
+            th.className = `th-${rowColor.toLowerCase()}`;
+            tr.appendChild(th);
+
+            colors.forEach(colColor => {
+                const td = document.createElement('td');
+                const val = initialData[rowColor][colColor];
+                
+                if (val !== '-') {
+                    const token = document.createElement('div');
+                    token.className = 'token';
+                    token.draggable = true;
+                    token.textContent = val;
+                    // 드래그 이벤트 연결
+                    token.addEventListener('dragstart', handleDragStart);
+                    token.addEventListener('dragover', handleDragOver);
+                    token.addEventListener('drop', handleDrop);
+                    token.addEventListener('dragend', handleDragEnd);
+                    td.appendChild(token);
+                } else {
+                    const empty = document.createElement('div');
+                    empty.className = 'token empty';
+                    empty.textContent = '-';
+                    td.appendChild(empty);
+                }
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+    }
+
+    // 시뮬레이션 이동 함수
+    function moveTo(nextColor) {
+        if (currentState === nextColor) {
+            log(`⚠️ 같은 색(${nextColor})으로는 이동할 수 없습니다.`);
+            return;
+        }
+
+        const row = document.getElementById(`row-${currentState}`);
+        let colIndex = colors.indexOf(nextColor) + 1; 
+        const cell = row.cells[colIndex];
+        const token = cell.querySelector('.token');
+
+        if (!token || token.classList.contains('empty')) {
+            log(`⛔ 이동 불가: 규칙이 없습니다.`);
+            return;
+        }
+
+        const char = token.textContent;
+        const prevColor = currentState;
+        currentState = nextColor;
+        outputString += char;
+
+        document.getElementById('outputMessage').textContent = outputString;
+        updateStatusUI();
+        highlightActiveRow(); // 이동할 때만 하이라이트 적용
+        log(`이동: ${prevColor} → ${nextColor} (전송: ${char})`);
+    }
+
+    function updateStatusUI() {
+        const text = document.getElementById('currentStateText');
+        const box = document.getElementById('currentColorBox');
+        
+        text.textContent = currentState;
+        text.style.color = currentState === 'White' ? '#333' : colorCodes[currentState];
+        box.style.backgroundColor = colorCodes[currentState];
+    }
+
+    function highlightActiveRow() {
+        colors.forEach(c => {
+            document.getElementById(`row-${c}`).classList.remove('active-row');
+        });
+        // 현재 로우 추가
+        document.getElementById(`row-${currentState}`).classList.add('active-row');
+    }
+
+    function resetSimulation() {
+        currentState = 'Red';
+        outputString = "";
+        document.getElementById('outputMessage').textContent = "";
+        document.getElementById('logArea').innerHTML = "초기화되었습니다. (시작 상태: Red)";
+        updateStatusUI();
+        // 리셋 시 하이라이트 제거
+        colors.forEach(c => {
+            document.getElementById(`row-${c}`).classList.remove('active-row');
+        });
+    }
+
+    function log(msg) {
+        const area = document.getElementById('logArea');
+        area.innerHTML = `<div>${msg}</div>` + area.innerHTML;
+    }
+
+    // --- 드래그 앤 드롭 로직 ---
+    function handleDragStart(e) {
+        draggedItem = this;
+        this.style.opacity = '0.4';
+        e.dataTransfer.effectAllowed = 'move';
+    }
+    function handleDragOver(e) { if (e.preventDefault) e.preventDefault(); return false; }
+    function handleDrop(e) {
+        e.stopPropagation(); e.preventDefault();
+        let targetItem = e.target;
+        if (!targetItem.classList.contains('token') || targetItem.classList.contains('empty')) return;
+        if (draggedItem !== targetItem) {
+            const tempText = draggedItem.textContent;
+            draggedItem.textContent = targetItem.textContent;
+            targetItem.textContent = tempText;
+            log(`🛠️ 규칙 변경: [${tempText}]와 [${draggedItem.textContent}]의 위치를 바꿨습니다.`);
+        }
+        return false;
+    }
+    function handleDragEnd() { this.style.opacity = '1'; draggedItem = null; }
+
+</script>
+
+</body>
+</html>

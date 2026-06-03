@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Curriculum 5x5 Matrix</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+        </header>
+
+        <div class="matrix-container">
+            <!-- Corner -->
+            <div class="header-cell corner-cell"></div>
+
+            <!-- Domain Headers -->
+            <div class="header-cell domain-vision">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path
+                        d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+                </svg>
+                <div>데이터 관찰</div>
+            </div>
+            <div class="header-cell domain-logic">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path
+                        d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-6 14H7v-2h6v2zm4-4H7v-2h10v2zm0-4H7V7h10v2z" />
+                </svg>
+                <div>순차 논리</div>
+            </div>
+            <div class="header-cell domain-data">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path
+                        d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" />
+                </svg>
+                <div>패턴과 규칙</div>
+            </div>
+            <div class="header-cell domain-network">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path
+                        d="M4 11h6a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1zm10 0h6a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1zM4 21h6a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1zm13-9c-2.67 0-4.63 2.5-3.08 5.63.1.2.22.4.34.6l-3.37 2.45 1.18 1.6 3.37-2.45c1.45 1.05 3.31.86 4.74-.5 1.84-1.74 1.4-5.18-1.07-6.23-.7-.29-1.44-.39-2.11-.1z" />
+                </svg>
+                <div>네트워크</div>
+            </div>
+            <div class="header-cell domain-system">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+                </svg>
+                <div>시스템</div>
+            </div>
+
+            <!-- Row 1: Input -->
+            <div class="header-cell process-cell">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2.5-8.5l-2.08 2.08c-.78.78-.78 2.05 0 2.83.78.78 2.05.78 2.83 0l1.75-1.75 3.16 3.16c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L12.41 12l2.17-2.17c.39-.39.39-1.02 0-1.41-.39-.39-1.02-.39-1.41 0L11.5 10.09 9.91 8.5c-.78-.78-2.05-.78-2.83 0-.78.78-.78 2.05 0 2.83L9.5 11.5z" />
+                </svg>
+                <div>입력</div>
+            </div>
+            <a href="curriculum_detail.html?id=A1" class="data-cell col-A">
+                <div class="term">데이터 정밀 관찰</div>
+                <div class="child-term">Data Scanning</div>
+                <div class="desc">대상의 특징을 데이터 단위로 세밀하게 봅니다.</div>
+            </a>
+            <a href="curriculum_detail.html?id=B1" class="data-cell col-B">
+                <div class="term">시퀀스 인지</div>
+                <div class="child-term">Sequence Recognition</div>
+                <div class="desc">사건의 앞뒤 순서와 흐름을 파악합니다.</div>
+            </a>
+            <a href="curriculum_detail.html?id=C1" class="data-cell col-C">
+                <div class="term">핵심 정보 수집</div>
+                <div class="child-term">Key Data Collection</div>
+                <div class="desc">수많은 정보 중 꼭 필요한 것만 골라냅니다.</div>
+            </a>
+            <a href="curriculum_detail.html?id=D1" class="data-cell col-D">
+                <div class="term">링크 발견</div>
+                <div class="child-term">Link Discovery</div>
+                <div class="desc">나와 대상 사이의 보이지 않는 연결을 찾습니다.</div>
+            </a>
+            <a href="curriculum_detail.html?id=E1" class="data-cell col-E">
+                <div class="term">환경 변수 인식</div>
+                <div class="child-term">Env. Variable</div>
+                <div class="desc">나를 둘러싼 상황과 조건을 파악합니다.</div>
+            </a>
+
+            <!-- Row 2: Structuring -->
+            <div class="header-cell process-cell">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L3.16 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.58 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" />
+                </svg>
+                <div>구조화</div>
+            </div>
+            <a href="curriculum_detail.html?id=A2" class="data-cell col-A">
+                <div class="term">속성 분류</div>
+                <div class="child-term">Classification</div>
+                <div class="desc">미세한 차이를 찾아 데이터를 구분합니다.</div>
+            </a>
+            <a href="curriculum_detail.html?id=B2" class="data-cell col-B">
+                <div class="term">문제 분해</div>
+                <div class="child-term">Decomposition</div>
+                <div class="desc">큰 문제를 작고 쉬운 단계로 쪼갭니다.</div>
+            </a>
+            <a href="curriculum_detail.html?id=C2" class="data-cell col-C">
+                <div class="term">범주화</div>
+                <div class="child-term">Categorization</div>
+                <div class="desc">같은 특징을 가진 것끼리 묶어 정리합니다.</div>
+            </a>
+            <a href="curriculum_detail.html?id=D2" class="data-cell col-D">
+                <div class="term">관계 단순화</div>
+                <div class="child-term">Simplification</div>
+                <div class="desc">복잡한 연결 중 핵심 뼈대만 남깁니다.</div>
+            </a>
+            <a href="curriculum_detail.html?id=E2" class="data-cell col-E">
+                <div class="term">역할 정의</div>
+                <div class="child-term">Role Definition</div>
+                <div class="desc">각 요소가 시스템에서 해야 할 일을 정합니다.</div>
+            </a>
+
+            <!-- Row 3: Abstraction -->
+            <div class="header-cell process-cell">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+                </svg>
+                <div>추상화</div>
+            </div>
+            <a href="curriculum_detail.html?id=A3" class="data-cell col-A">
+                <div class="term">시뮬레이션</div>
+                <div class="child-term">Simulation</div>
+                <div class="desc">눈에 보이지 않는 과정을 머릿속으로 그려봅니다.</div>
+            </a>
+            <a href="curriculum_detail.html?id=B3" class="data-cell col-B">
+                <div class="term">알고리즘 설계</div>
+                <div class="child-term">Algorithm Design</div>
+                <div class="desc">조건에 따라 행동할 규칙과 순서를 만듭니다.</div>
+            </a>
+            <a href="curriculum_detail.html?id=C3" class="data-cell col-C">
+                <div class="term">기호화</div>
+                <div class="child-term">Symbolization</div>
+                <div class="desc">복잡한 내용을 알기 쉬운 기호로 바꿉니다.</div>
+            </a>
+            <a href="curriculum_detail.html?id=D3" class="data-cell col-D">
+                <div class="term">관계도 맵핑</div>
+                <div class="child-term">Network Mapping</div>
+                <div class="desc">요소들이 연결된 전체 지도를 그립니다.</div>
+            </a>
+            <a href="curriculum_detail.html?id=E3" class="data-cell col-E">
+                <div class="term">상호작용 설계</div>
+                <div class="child-term">Interaction</div>
+                <div class="desc">서로 주고받는 영향과 반응을 설계합니다.</div>
+            </a>
+
+            <!-- Row 4: Verification -->
+            <div class="header-cell process-cell">
+                <svg viewBox="0 0 24 24">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                </svg>
+                <div>검증</div>
+            </div>
+            <a href="curriculum_detail.html?id=A4" class="data-cell col-A">
+                <div class="term">리스크 관리</div>
+                <div class="child-term">Risk Management</div>
+                <div class="desc">위험 요소를 미리 찾아 안전을 확보합니다.</div>
+            </a>
+            <a href="curriculum_detail.html?id=B4" class="data-cell col-B">
+                <div class="term">디버깅</div>
+                <div class="child-term">Debugging</div>
+                <div class="desc">논리의 오류를 스스로 찾아 수정합니다.</div>
+            </a>
+            <a href="curriculum_detail.html?id=C4" class="data-cell col-C">
+                <div class="term">데이터 검증</div>
+                <div class="child-term">Data Verification</div>
+                <div class="desc">정보가 진짜인지 가짜인지 판별합니다.</div>
+            </a>
+            <a href="curriculum_detail.html?id=D4" class="data-cell col-D">
+                <div class="term">연결 무결성</div>
+                <div class="child-term">Connection Check</div>
+                <div class="desc">소외되거나 끊어진 연결이 없는지 살핍니다.</div>
+            </a>
+            <a href="curriculum_detail.html?id=E4" class="data-cell col-E">
+                <div class="term">결과 예측</div>
+                <div class="child-term">Prediction</div>
+                <div class="desc">내 행동이 가져올 결과를 논리적으로 예상합니다.</div>
+            </a>
+
+            <!-- Row 5: Optimization -->
+            <div class="header-cell process-cell">
+                <svg viewBox="0 0 24 24">
+                    <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z" />
+                </svg>
+                <div>최적화</div>
+            </div>
+            <a href="curriculum_detail.html?id=A5" class="data-cell col-A">
+                <div class="term">최적 관점</div>
+                <div class="child-term">Best Viewpoint</div>
+                <div class="desc">전체를 가장 잘 볼 수 있는 위치를 찾습니다.</div>
+            </a>
+            <a href="curriculum_detail.html?id=B5" class="data-cell col-B">
+                <div class="term">효율성 개선</div>
+                <div class="child-term">Efficiency</div>
+                <div class="desc">시간과 노력을 아끼는 더 빠른 방법을 찾습니다.</div>
+            </a>
+            <a href="curriculum_detail.html?id=C5" class="data-cell col-C">
+                <div class="term">데이터 압축</div>
+                <div class="child-term">Data Compression</div>
+                <div class="desc">핵심만 남겨 복잡한 정보를 요약합니다.</div>
+            </a>
+            <a href="curriculum_detail.html?id=D5" class="data-cell col-D" title="Click to see details and Play Game!">
+                <div class="term">최적 경로 </div>
+                <div class="child-term">Shortest Path</div>
+                <div class="desc">목적지로 가는 가장 빠르고 정확한 길을 찾습니다.</div>
+            </a>
+            <a href="curriculum_detail.html?id=E5" class="data-cell col-E">
+                <div class="term">협업 지능</div>
+                <div class="child-term">Collaboration</div>
+                <div class="desc">함께 협력하여 더 큰 시너지를 만듭니다.</div>
+            </a>
+
+        </div>
+    </div>
+
+</body>
+
+</html>

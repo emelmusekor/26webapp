@@ -1,0 +1,30 @@
+/* C1 Ocean Sonar */
+#task-stage {
+    background: #001f3f;
+    color: white;
+    padding: 20px;
+    border-radius: 15px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#sonar-grid-container {
+    background: #001133;
+    border: 4px solid #005577;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 200, 255, 0.2);
+}
+
+#sonar-grid div {
+    transition: background 0.2s;
+}
+
+#sonar-grid div:hover {
+    border-color: #00ccff;
+}
+
+select {
+    background: #003366;
+    color: white;
+    border: 1px solid #005577;
+    padding: 5px;
+}

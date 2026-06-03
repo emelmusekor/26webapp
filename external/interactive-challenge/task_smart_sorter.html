@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>스마트 분류기 C2 - Smart Logic Sorter</title>
+
+    <style>
+        body {
+            background: #2d3436;
+            color: white;
+            overflow: hidden;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .game-container {
+            display: flex;
+            height: 90vh;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .toolbox {
+            width: 250px;
+            background: #636e72;
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .factory {
+            flex: 1;
+            background: #dfe6e9;
+            /* Light floor */
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            border: 4px solid #b2bec3;
+        }
+
+        .tool-item {
+            background: white;
+            color: #333;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .tool-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .tool-icon {
+            width: 30px;
+            height: 30px;
+            background: #0984e3;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        /* Game Entities */
+        .conveyor {
+            position: absolute;
+            height: 40px;
+            background: linear-gradient(90deg, #333 50%, #444 50%);
+            background-size: 20px 100%;
+            animation: moveBelt 1s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes moveBelt {
+            from {
+                background-position: 0 0;
+            }
+
+            to {
+                background-position: 20px 0;
+            }
+        }
+
+        .item {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            transition: left 0.1s linear, top 0.1s linear;
+        }
+
+        .node {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border: 2px dashed #b2bec3;
+            border-radius: 10px;
+            z-index: 5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .node.placed {
+            border: 2px solid #00b894;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .bin {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: white;
+            z-index: 2;
+        }
+
+        .hud {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 20px;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .start-btn {
+            background: #00b894;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .start-btn:hover {
+            background: #00a884;
+        }
+
+        .logic-gate {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        .gate-arrow {
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+    </style>
+
+    <link rel="stylesheet" href="css/detail.css">
+    <link rel="stylesheet" href="css/tasks/C2.css">
+</head>
+
+<body>
+    <div class="game-container">
+        <div id="content-wrappper" style="max-width:800px; margin:0 auto; padding:20px;">
+            <div id="task-stage"></div>
+        </div>
+        <script src="js/data/curriculum_data.js?v=10"></script>
+        <script src="js/data/levels/C2_levels.js?v=10"></script>
+        <script src="js/tasks/C2.js?v=10"></script>
+</body>
+
+
+</html>

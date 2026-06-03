@@ -1,0 +1,27 @@
+/* B3 Train Master */
+#task-stage {
+    background: #e8f5e9;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+#train-grid {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.track-piece {
+    transition: transform 0.2s;
+}
+
+.track-piece:hover {
+    transform: scale(1.1);
+    background: white !important;
+}
+
+.grid-cell {
+    transition: background 0.3s;
+}
+
+.grid-cell:hover {
+    background: #f1f8e9 !important;
+}

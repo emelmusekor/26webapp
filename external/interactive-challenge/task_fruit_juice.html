@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>무지개 주스 시뮬레이터</title>
+    <style>
+        :root {
+            --bg-color: #f0f4f8;
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --danger-color: #e74c3c;
+            --success-color: #27ae60;
+        }
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 { margin-bottom: 10px; }
+        .description {
+            max-width: 600px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+            color: #555;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .highlight { color: var(--danger-color); font-weight: bold; }
+
+        /* Game Area */
+        .game-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 1000px;
+        }
+
+        /* Inventory */
+        .panel {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            min-width: 280px;
+        }
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 10px;
+        }
+        .fruit-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: transform 0.1s, border-color 0.2s;
+        }
+        .fruit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            border-color: var(--accent-color);
+        }
+        .fruit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #eee;
+        }
+        .fruit-info { display: flex; align-items: center; gap: 10px; font-weight: bold; }
+        .fruit-time { font-size: 0.8em; color: #888; }
+        .fruit-count { 
+            background: var(--primary-color); 
+            color: white; 
+            padding: 2px 8px; 
+            border-radius: 12px; 
+            font-size: 0.9em; 
+        }
+
+        /* Mixer */
+        .mixer-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 320px;
+        }
+        .mixer-slots {
+            display: flex;
+            gap: 10px;
+            background: #e0e0e0;
+            padding: 20px;
+            border-radius: 0 0 15px 15px;
+            border-top: none;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            min-height: 80px;
+            justify-content: center;
+        }
+        .mixer-top {
+            width: 100%;
+            height: 20px;
+            background: #bdc3c7;
+            border-radius: 15px 15px 0 0;
+        }
+        .slot {
+            width: 50px;
+            height: 50px;
+            border: 2px dashed #aaa;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .slot.filled {
+            border-style: solid;
+            background: white;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .status-msg {
+            margin-bottom: 15px;
+            font-weight: bold;
+            font-size: 0.9em;
+            text-align: center;
+            min-height: 1.2em;
+        }
+        .status-ok { color: var(--success-color); }
+        .status-no { color: var(--danger-color); }
+
+        .blend-btn {
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 0 #219150;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+        .blend-btn:disabled {
+            background-color: #95a5a6;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+        .blend-btn:active:not(:disabled) {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        /* Scoreboard */
+        .scoreboard {
+            width: 100%;
+            margin-top: 20px;
+            border-top: 2px solid #eee;
+            padding-top: 10px;
+        }
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px dashed #eee;
+            font-size: 0.9em;
+        }
+        .total-score {
+            font-size: 1.5em;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+            color: var(--primary-color);
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            z-index: 100;
+        }
+        .overlay.active { display: flex; }
+        .overlay h2 { font-size: 2.5em; margin-bottom: 10px; }
+        .overlay p { font-size: 1.2em; margin-bottom: 30px; text-align: center; max-width: 500px; line-height: 1.5; }
+        .restart-btn {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            background: white;
+            color: black;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+
+        .current-time-display {
+            font-size: 1.2em;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🌈 무지개 주스 만들기</h1>
+    
+    <div class="description">
+        <p><strong>규칙:</strong> 믹서기에 <strong>5개</strong>를 꽉 채우고, <strong>서로 다른 3종류 이상</strong>의 과일이 섞여야 작동합니다.<br>
+        시간은 들어간 과일 중 <span class="highlight">가장 긴 시간</span>으로 결정됩니다.<br>
+        <strong>도전:</strong> 최소 시간으로 모든 과일(20개)을 갈아보세요!</p>
+    </div>
+
+    <div class="game-container">
+        <div class="panel">
+            <h3>냉장고 (남은 재료)</h3>
+            <div id="inventory-list" class="inventory-grid">
+                </div>
+        </div>
+
+        <div class="panel mixer-area">
+            <h3>믹서기</h3>
+            <div class="mixer-top"></div>
+            <div class="mixer-slots" id="mixer-slots">
+                </div>
+            
+            <div class="current-time-display">
+                예상 소요 시간: <span id="current-batch-time" style="font-weight:bold; color:#e74c3c;">0</span>초
+            </div>
+
+            <div id="status-msg" class="status-msg status-no">재료를 5개 채워주세요.</div>
+            <button id="blend-btn" class="blend-btn" disabled>갈기 (Blend!)</button>
+
+            <div class="scoreboard">
+                <div id="history-list"></div>
+                <div class="total-score">총 시간: <span id="total-time">0</span>초</div>
+            </div>
+            <button onclick="resetGame()" style="margin-top:15px; padding:5px 10px; background:none; border:1px solid #ccc; border-radius:4px; cursor:pointer;">처음부터 다시하기</button>
+        </div>
+    </div>
+
+    <div id="result-overlay" class="overlay">
+        <h2 id="result-title"></h2>
+        <p id="result-desc"></p>
+        <button class="restart-btn" onclick="resetGame()">다시 도전하기</button>
+    </div>
+
+    <script>
+        // Game State
+        const INITIAL_FRUITS = [
+            { id: 'beet', name: '비트', time: 7, count: 4, icon: '🧅', color: '#D50032' },
+            { id: 'carrot', name: '당근', time: 6, count: 4, icon: '🥕', color: '#FF6B00' },
+            { id: 'apple', name: '사과', time: 5, count: 4, icon: '🍎', color: '#e74c3c' },
+            { id: 'banana', name: '바나나', time: 3, count: 4, icon: '🍌', color: '#f1c40f' },
+            { id: 'kiwi', name: '키위', time: 1, count: 4, icon: '🥝', color: '#8e44ad' }
+        ];
+
+        let inventory = JSON.parse(JSON.stringify(INITIAL_FRUITS));
+        let mixerBatch = [];
+        let totalTime = 0;
+        let history = [];
+
+        // DOM Elements
+        const inventoryEl = document.getElementById('inventory-list');
+        const mixerSlotsEl = document.getElementById('mixer-slots');
+        const blendBtn = document.getElementById('blend-btn');
+        const statusMsg = document.getElementById('status-msg');
+        const currentTimeEl = document.getElementById('current-batch-time');
+        const totalTimeEl = document.getElementById('total-time');
+        const historyListEl = document.getElementById('history-list');
+        const overlay = document.getElementById('result-overlay');
+
+        // Init
+        function init() {
+            renderInventory();
+            renderMixer();
+        }
+
+        // Render Inventory
+        function renderInventory() {
+            inventoryEl.innerHTML = '';
+            inventory.forEach((fruit, index) => {
+                const btn = document.createElement('div');
+                btn.className = 'fruit-btn';
+                if (fruit.count === 0) btn.setAttribute('disabled', 'true');
+                btn.onclick = () => addToMixer(index);
+                
+                btn.innerHTML = `
+                    <div class="fruit-info">
+                        <span style="font-size:1.5em">${fruit.icon}</span>
+                        <span>${fruit.name}</span>
+                        <span class="fruit-time">(${fruit.time}초)</span>
+                    </div>
+                    <span class="fruit-count">${fruit.count}</span>
+                `;
+                inventoryEl.appendChild(btn);
+            });
+        }
+
+        // Render Mixer
+        function renderMixer() {
+            mixerSlotsEl.innerHTML = '';
+            let maxTime = 0;
+
+            // Render filled slots
+            mixerBatch.forEach((fruit, index) => {
+                const slot = document.createElement('div');
+                slot.className = 'slot filled';
+                slot.innerText = fruit.icon;
+                slot.style.borderColor = fruit.color;
+                slot.onclick = () => removeFromMixer(index);
+                mixerSlotsEl.appendChild(slot);
+                if (fruit.time > maxTime) maxTime = fruit.time;
+            });
+
+            // Render empty slots
+            for (let i = mixerBatch.length; i < 5; i++) {
+                const slot = document.createElement('div');
+                slot.className = 'slot';
+                slot.innerText = i + 1;
+                mixerSlotsEl.appendChild(slot);
+            }
+
+            currentTimeEl.innerText = maxTime;
+            checkConditions();
+        }
+
+        // Logic: Add to Mixer
+        function addToMixer(invIndex) {
+            if (mixerBatch.length >= 5) return;
+            if (inventory[invIndex].count > 0) {
+                inventory[invIndex].count--;
+                mixerBatch.push({ ...inventory[invIndex] }); // Copy object
+                renderInventory();
+                renderMixer();
+            }
+        }
+
+        // Logic: Remove from Mixer
+        function removeFromMixer(batchIndex) {
+            const fruitToRemove = mixerBatch[batchIndex];
+            // Find in inventory to return
+            const invItem = inventory.find(f => f.id === fruitToRemove.id);
+            invItem.count++;
+            
+            mixerBatch.splice(batchIndex, 1);
+            renderInventory();
+            renderMixer();
+        }
+
+        // Logic: Check Rules
+        function checkConditions() {
+            const uniqueTypes = new Set(mixerBatch.map(f => f.id)).size;
+            const count = mixerBatch.length;
+            
+            if (count < 5) {
+                statusMsg.innerText = `${5 - count}개 더 넣어주세요.`;
+                statusMsg.className = 'status-msg status-no';
+                blendBtn.disabled = true;
+            } else if (uniqueTypes < 3) {
+                statusMsg.innerText = `현재 ${uniqueTypes}종류입니다. (3종류 이상 필요!)`;
+                statusMsg.className = 'status-msg status-no';
+                blendBtn.disabled = true;
+            } else {
+                statusMsg.innerText = "준비 완료! 갈 수 있습니다.";
+                statusMsg.className = 'status-msg status-ok';
+                blendBtn.disabled = false;
+            }
+        }
+
+        // Logic: Blend
+        function blend() {
+            const maxTime = Math.max(...mixerBatch.map(f => f.time));
+            totalTime += maxTime;
+            
+            // Add to history
+            const batchIcons = mixerBatch.map(f => f.icon).join(' ');
+            const historyItem = document.createElement('div');
+            historyItem.className = 'history-item';
+            historyItem.innerHTML = `<span>${history.length + 1}회차: ${batchIcons}</span> <span>+${maxTime}초</span>`;
+            historyListEl.appendChild(historyItem);
+
+            // Reset Batch
+            mixerBatch = [];
+            totalTimeEl.innerText = totalTime;
+            renderMixer(); // Will clear slots
+
+            checkGameStatus();
+        }
+
+        blendBtn.onclick = blend;
+
+        // Check Win/Loss (Deadlock)
+        function checkGameStatus() {
+            const remainingTotal = inventory.reduce((sum, f) => sum + f.count, 0);
+            
+            // 1. Clear Condition
+            if (remainingTotal === 0) {
+                showResult("완성!", `총 ${totalTime}초가 걸렸습니다.<br>24초가 나왔다면 최적의 효율입니다!`);
+                return;
+            }
+
+            // 2. Deadlock Condition
+            // 남은 과일이 5개 미만이거나, 
+            // 남은 과일을 다 합쳐도 종류가 3종류가 안 된다면? (Assuming we need to make full batches of 5 usually, but here specifically remaining items need to fit rules)
+            // The problem says "make all into juice". If remaining < 5, we can't fill the mixer.
+            // But actually, in this puzzle math, 20 items / 5 slots = exactly 4 turns.
+            // So if we have remaining items, we must have enough to fill 5.
+            // Deadlock happens if remaining items (must be 5, 10, or 15) contain < 3 types.
+
+            // Get available types with count > 0
+            const availableTypes = inventory.filter(f => f.count > 0).length;
+
+            if (availableTypes < 3) {
+                showResult("교착 상태 (Deadlock)", "남은 재료의 종류가 2가지뿐이라<br>기계를 작동시킬 수 없습니다!<br><br><strong>(시스템이 멈췄습니다)</strong>");
+            }
+        }
+
+        function showResult(title, desc) {
+            document.getElementById('result-title').innerHTML = title;
+            document.getElementById('result-desc').innerHTML = desc;
+            overlay.classList.add('active');
+        }
+
+        function resetGame() {
+            inventory = JSON.parse(JSON.stringify(INITIAL_FRUITS));
+            mixerBatch = [];
+            totalTime = 0;
+            history = [];
+            historyListEl.innerHTML = '';
+            totalTimeEl.innerText = '0';
+            overlay.classList.remove('active');
+            renderInventory();
+            renderMixer();
+        }
+
+        init();
+    </script>
+</body>
+</html>

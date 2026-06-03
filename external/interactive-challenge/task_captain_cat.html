@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Boss & Weakest (Vector Ver.)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
+        body { font-family: 'Noto Sans KR', sans-serif; user-select: none; }
+
+        .draggable-source { cursor: grab; touch-action: none; }
+        .draggable-source:active { cursor: grabbing; }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+            20%, 40%, 60%, 80% { transform: translateX(4px); }
+        }
+        .shaking { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+
+        .heart-icon { transition: all 0.3s; }
+        .heart-lost { filter: grayscale(100%); opacity: 0.2; }
+
+        /* 구역 스타일 */
+        .zone-boss { background-color: #fef9c3; border-color: #eab308; } /* Yellow */
+        .zone-weakest { background-color: #f3f4f6; border-color: #9ca3af; } /* Gray */
+
+        /* SVG 컨테이너 */
+        .cat-svg-container { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+        .cat-svg-container svg { width: 90%; height: 90%; filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.1)); }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div class="w-full max-w-5xl flex justify-end items-center mb-4 px-4 h-12">
+        <div class="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-slate-200">
+            <span class="text-slate-500 font-bold text-sm mr-2">남은 기회</span>
+            <div id="hearts" class="flex gap-1 text-2xl text-red-500">
+                <span class="heart-icon">❤️</span>
+                <span class="heart-icon">❤️</span>
+                <span class="heart-icon">❤️</span>
+                <span class="heart-icon">❤️</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-col lg:flex-row gap-6 w-full max-w-5xl h-[550px]">
+
+        <div class="bg-white rounded-3xl shadow-xl flex-[2] relative overflow-hidden border-4 border-slate-200 flex flex-col">
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-5">
+                </div>
+
+            <div class="flex-1 flex items-center justify-center gap-8 md:gap-20 relative z-10 px-4">
+                <div id="arena-1" class="drop-zone w-36 h-32 md:w-48 md:h-40 bg-slate-100 rounded-2xl border-4 border-dashed border-slate-300 flex items-center justify-center shadow-inner p-2"
+                     ondrop="drop(event, 'arena')" ondragover="allowDrop(event)"></div>
+                
+                <div class="text-4xl font-black text-slate-300 shrink-0">VS</div>
+                
+                <div id="arena-2" class="drop-zone w-36 h-32 md:w-48 md:h-40 bg-slate-100 rounded-2xl border-4 border-dashed border-slate-300 flex items-center justify-center shadow-inner p-2"
+                     ondrop="drop(event, 'arena')" ondragover="allowDrop(event)"></div>
+            </div>
+
+            <div class="h-14 flex items-center justify-center bg-slate-50 border-t border-slate-100 z-20">
+                <p id="msg" class="text-slate-500 font-bold text-sm animate-pulse">
+                    고양이를 놓아 비교하세요 (낮은 서열이 하악질)
+                </p>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-3 w-full lg:w-72 h-full">
+            
+            <div id="bench" class="bg-white p-3 rounded-3xl shadow-lg h-32 grid grid-cols-4 gap-2 content-center border-2 border-slate-100"
+                 ondrop="drop(event, 'bench')" ondragover="allowDrop(event)">
+            </div>
+
+            <div id="zone-boss" class="drop-zone zone-boss flex-1 rounded-3xl shadow-md border-4 border-dashed flex flex-col items-center justify-center relative transition-colors p-2"
+                 ondrop="drop(event, 'result')" ondragover="allowDrop(event)">
+                <div class="placeholder text-center pointer-events-none">
+                    <span class="text-4xl block mb-2">👑</span>
+                    <span class="text-yellow-800 font-black text-base break-keep">가장 서열이 높은 고양이</span>
+                </div>
+            </div>
+
+            <div id="zone-weakest" class="drop-zone zone-weakest flex-1 rounded-3xl shadow-md border-4 border-dashed flex flex-col items-center justify-center relative transition-colors p-2"
+                 ondrop="drop(event, 'result')" ondragover="allowDrop(event)">
+                <div class="placeholder text-center pointer-events-none">
+                    <span class="text-4xl block mb-2">🦴</span>
+                    <span class="text-slate-500 font-black text-base break-keep">가장 서열이 낮은 고양이</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <button onclick="location.reload()" class="mt-6 text-slate-400 hover:text-slate-600 font-bold text-sm underline">
+        리셋
+    </button>
+
+    <template id="cat-template">
+        <div class="draggable-source w-full h-full bg-white rounded-xl shadow-sm border border-slate-200 p-1 relative hover:scale-105 transition-transform z-30 flex items-center justify-center" draggable="true" ondragstart="drag(event)">
+            <div class="cat-svg-container">
+                </div>
+        </div>
+    </template>
+
+    <div id="result-modal" class="fixed inset-0 bg-black/80 hidden flex items-center justify-center z-50 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border-4">
+            <div id="modal-icon" class="text-6xl mb-4"></div>
+            <h2 id="modal-title" class="text-3xl font-black mb-2"></h2>
+            <p id="modal-desc" class="text-slate-500 font-medium mb-6 whitespace-pre-line"></p>
+            <button onclick="location.reload()" class="w-full py-3 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-700">다시 도전</button>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * SVG 고양이 생성기 (Vector Engine)
+         * type: 1(회색), 2(치즈), 3(턱시도), 4(샴)
+         * state: 'normal' | 'angry'
+         */
+        function getCatSVG(type, state) {
+            // 색상 팔레트 정의
+            const colors = {
+                1: { body: '#9ca3af', dark: '#6b7280', light: '#e5e7eb' }, // Grey
+                2: { body: '#fb923c', dark: '#ea580c', light: '#fed7aa' }, // Orange (Stripes)
+                3: { body: '#1f2937', dark: '#000000', light: '#ffffff' }, // Tuxedo
+                4: { body: '#f3e8ff', dark: '#4c1d95', light: '#fae8ff' }  // Siamese-like (Cream/Dark)
+            };
+            const c = colors[type];
+            
+            // 공통 파츠
+            const bodyPath = `<ellipse cx="50" cy="60" rx="35" ry="25" fill="${c.body}" />`;
+            const headCircle = `<circle cx="50" cy="35" r="22" fill="${type === 4 ? c.light : c.body}" />`;
+            
+            // 귀 (샴 고양이는 귀가 어두움)
+            const earColor = (type === 4) ? c.dark : c.body;
+            const ears = `
+                <path d="M30 25 L25 5 L45 20 Z" fill="${earColor}" />
+                <path d="M70 25 L75 5 L55 20 Z" fill="${earColor}" />
+            `;
+
+            // 꼬리 (샴 고양이는 꼬리가 어두움)
+            const tailColor = (type === 4) ? c.dark : c.body;
+            const tail = `<path d="M80 60 Q95 50 95 30" stroke="${tailColor}" stroke-width="6" fill="none" stroke-linecap="round" />`;
+
+            // 다리
+            const legColor = (type === 4) ? c.dark : c.body;
+            const legs = `
+                <rect x="25" y="70" width="8" height="20" rx="4" fill="${legColor}" />
+                <rect x="40" y="75" width="8" height="20" rx="4" fill="${legColor}" />
+                <rect x="55" y="75" width="8" height="20" rx="4" fill="${legColor}" />
+                <rect x="70" y="70" width="8" height="20" rx="4" fill="${legColor}" />
+            `;
+
+            // 무늬 (치즈태비 줄무늬, 턱시도 배/얼굴, 샴 얼굴)
+            let patterns = '';
+            if (type === 2) { // 줄무늬
+                patterns = `
+                    <path d="M45 15 L55 15" stroke="${c.dark}" stroke-width="2" />
+                    <path d="M48 10 L52 10" stroke="${c.dark}" stroke-width="2" />
+                    <path d="M30 60 Q40 50 50 60" stroke="${c.dark}" stroke-width="2" fill="none" />
+                `;
+            } else if (type === 3) { // 턱시도 (흰 배, 흰 주둥이)
+                patterns = `
+                    <ellipse cx="50" cy="65" rx="15" ry="10" fill="${c.light}" />
+                    <circle cx="50" cy="42" r="8" fill="${c.light}" />
+                `;
+            } else if (type === 4) { // 샴 (얼굴 중앙 어둡게)
+                patterns = `
+                    <circle cx="50" cy="38" r="10" fill="${c.dark}" opacity="0.8" />
+                `;
+            }
+
+            // 표정 (Normal vs Angry)
+            let face = '';
+            if (state === 'normal') {
+                face = `
+                    <circle cx="43" cy="35" r="2.5" fill="black" />
+                    <circle cx="57" cy="35" r="2.5" fill="black" />
+                    <path d="M48 40 L50 42 L52 40" stroke="black" stroke-width="1.5" fill="none" />
+                    <path d="M45 42 L35 40 M45 44 L35 44" stroke="black" stroke-width="0.5" />
+                    <path d="M55 42 L65 40 M55 44 L65 44" stroke="black" stroke-width="0.5" />
+                `;
+            } else {
+                // Angry: 치켜올라간 눈, 벌린 입
+                face = `
+                    <path d="M38 32 L48 36" stroke="black" stroke-width="1.5" />
+                    <circle cx="43" cy="36" r="2" fill="yellow" stroke="black" stroke-width="0.5"/>
+                    <circle cx="43" cy="36" r="0.5" fill="black"/>
+
+                    <path d="M62 32 L52 36" stroke="black" stroke-width="1.5" />
+                    <circle cx="57" cy="36" r="2" fill="yellow" stroke="black" stroke-width="0.5"/>
+                    <circle cx="57" cy="36" r="0.5" fill="black"/>
+
+                    <path d="M45 42 Q50 48 55 42" fill="#7f1d1d" />
+                    <path d="M46 42 L48 45 L50 42 L52 45 L54 42" fill="white" />
+                `;
+            }
+
+            return `
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    ${tail} ${legs} ${bodyPath} ${ears} ${headCircle} ${patterns} ${face}
+                </svg>
+            `;
+        }
+
+
+        // 게임 데이터
+        // type: 1~4 (각기 다른 외형)
+        let cats = [
+            { id: 'c1', type: 1, strength: 0 },
+            { id: 'c2', type: 2, strength: 0 },
+            { id: 'c3', type: 3, strength: 0 },
+            { id: 'c4', type: 4, strength: 0 }
+        ];
+
+        let chances = 4;
+        let isProcessing = false;
+
+        function init() {
+            // 서열 랜덤 배정
+            const strengths = [1, 2, 3, 4].sort(() => Math.random() - 0.5);
+            cats.forEach((c, i) => c.strength = strengths[i]);
+
+            const bench = document.getElementById('bench');
+            const tmpl = document.getElementById('cat-template');
+
+            cats.forEach(c => {
+                const clone = tmpl.content.cloneNode(true);
+                const el = clone.querySelector('.draggable-source');
+                el.id = c.id; // ID 설정
+                el.dataset.id = c.id;
+                
+                // 초기 이미지(SVG) 렌더링
+                renderCat(el, 'normal');
+                
+                bench.appendChild(el);
+            });
+        }
+
+        function renderCat(element, state) {
+            const catData = cats.find(c => c.id === element.dataset.id);
+            const svgContainer = element.querySelector('.cat-svg-container');
+            svgContainer.innerHTML = getCatSVG(catData.type, state);
+        }
+
+        function allowDrop(ev) { ev.preventDefault(); }
+        function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+
+        function drop(ev, zoneType) {
+            ev.preventDefault();
+            const id = ev.dataTransfer.getData("text");
+            const draggedEl = document.getElementById(id);
+            const dropZone = ev.target.closest('.drop-zone') || ev.target.closest('#bench');
+
+            if (!dropZone) return;
+
+            // 아레나 진입 시 기회 체크
+            if (zoneType === 'arena' && chances <= 0) {
+                shakeUI(document.getElementById('hearts'));
+                return;
+            }
+
+            // 기존 요소 교체 로직 (벤치가 아닌 경우)
+            if (dropZone.id !== 'bench') {
+                const existing = dropZone.querySelector('.draggable-source');
+                if (existing) {
+                    document.getElementById('bench').appendChild(existing);
+                    renderCat(existing, 'normal');
+                    existing.classList.remove('shaking');
+                }
+            }
+
+            dropZone.appendChild(draggedEl);
+            renderCat(draggedEl, 'normal');
+            draggedEl.classList.remove('shaking');
+
+            // 플레이스홀더 토글
+            togglePlaceholders();
+
+            // 로직 분기
+            if (zoneType === 'arena') {
+                checkFight();
+            } else if (zoneType === 'result') {
+                checkWinCondition();
+            }
+        }
+
+        function togglePlaceholders() {
+            const bossZone = document.getElementById('zone-boss');
+            const weakestZone = document.getElementById('zone-weakest');
+            
+            bossZone.querySelector('.placeholder').style.display = 
+                bossZone.querySelector('.draggable-source') ? 'none' : 'block';
+                
+            weakestZone.querySelector('.placeholder').style.display = 
+                weakestZone.querySelector('.draggable-source') ? 'none' : 'block';
+        }
+
+        function checkFight() {
+            if (isProcessing) return;
+
+            const slot1 = document.getElementById('arena-1');
+            const slot2 = document.getElementById('arena-2');
+            const c1 = slot1.querySelector('.draggable-source');
+            const c2 = slot2.querySelector('.draggable-source');
+
+            if (c1 && c2) {
+                if (chances <= 0) return;
+
+                isProcessing = true;
+                chances--;
+                updateHearts();
+
+                const d1 = cats.find(c => c.id === c1.dataset.id);
+                const d2 = cats.find(c => c.id === c2.dataset.id);
+                
+                // Strength 낮으면 하악질
+                let loserEl;
+                if (d1.strength < d2.strength) {
+                    loserEl = c1;
+                } else {
+                    loserEl = c2;
+                }
+
+                document.getElementById('msg').textContent = "비교 중...";
+
+                setTimeout(() => {
+                    // 하악질 모드로 변경
+                    renderCat(loserEl, 'angry');
+                    loserEl.classList.add('shaking');
+
+                    setTimeout(() => {
+                        isProcessing = false;
+                        if (chances === 0) {
+                            const msgEl = document.getElementById('msg');
+                            msgEl.textContent = "기회 종료! 정답 칸에 고양이를 배치하세요.";
+                            msgEl.className = "text-red-500 font-black text-sm animate-bounce";
+                        } else {
+                            document.getElementById('msg').textContent = "고양이를 놓아 비교하세요";
+                        }
+                    }, 800);
+                }, 300);
+            }
+        }
+
+        function checkWinCondition() {
+            const bossZone = document.getElementById('zone-boss');
+            const weakestZone = document.getElementById('zone-weakest');
+
+            const bossCat = bossZone.querySelector('.draggable-source');
+            const weakestCat = weakestZone.querySelector('.draggable-source');
+
+            if (bossCat && weakestCat) {
+                const bData = cats.find(c => c.id === bossCat.dataset.id);
+                const wData = cats.find(c => c.id === weakestCat.dataset.id);
+                
+                showResult(bData.strength === 4, wData.strength === 1);
+            }
+        }
+
+        function showResult(isBossCorrect, isWeakestCorrect) {
+            const modal = document.getElementById('result-modal');
+            const title = document.getElementById('modal-title');
+            const icon = document.getElementById('modal-icon');
+            const desc = document.getElementById('modal-desc');
+            const container = modal.querySelector('div');
+
+            modal.classList.remove('hidden');
+
+            if (isBossCorrect && isWeakestCorrect) {
+                icon.textContent = "🏆";
+                title.textContent = "완벽합니다!";
+                title.className = "text-4xl font-black text-green-600 mb-2";
+                desc.textContent = "대장과 꼴찌를 모두 찾았습니다!";
+                container.className = "bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border-4 border-green-500";
+            } else {
+                icon.textContent = "😅";
+                title.textContent = "실패했습니다";
+                title.className = "text-4xl font-black text-red-500 mb-2";
+                
+                let failMsg = [];
+                if (!isBossCorrect) failMsg.push("- 대장이 틀렸습니다.");
+                if (!isWeakestCorrect) failMsg.push("- 꼴찌가 틀렸습니다.");
+                
+                desc.textContent = failMsg.join("\n");
+                container.className = "bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border-4 border-red-500";
+            }
+        }
+
+        function updateHearts() {
+            const hearts = document.querySelectorAll('.heart-icon');
+            for (let i = 0; i < 4; i++) {
+                if (i >= chances) hearts[3-i].classList.add('heart-lost');
+            }
+        }
+
+        function shakeUI(el) {
+            el.classList.add('shaking');
+            setTimeout(() => el.classList.remove('shaking'), 500);
+        }
+
+        init();
+    </script>
+</body>
+</html>

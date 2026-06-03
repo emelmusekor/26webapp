@@ -1,0 +1,45 @@
+/* D5 Toy Trader Styling */
+#task-stage {
+    font-family: 'Jua', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #f0f8ff;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+#gameCanvas {
+    background: white;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    margin-top: 20px;
+    cursor: default;
+}
+
+#level-select {
+    font-size: 18px;
+    padding: 5px 15px;
+    border-radius: 10px;
+    border: 2px solid #48dbfb;
+    background: white;
+    cursor: pointer;
+}
+
+#msg-bubble {
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#char-face {
+    transition: all 0.3s;
+    background-color: white;
+}
+
+button {
+    transition: transform 0.1s;
+}
+
+button:active {
+    transform: scale(0.95);
+}

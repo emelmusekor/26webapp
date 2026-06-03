@@ -1,0 +1,190 @@
+:root {
+    --bg-color: #f4f6f9;
+    --text-color: #333;
+    --border-color: #e0e0e0;
+    --header-bg: #2c3e50;
+    --header-text: #ecf0f1;
+    --domain-vision: #3498db;
+    --domain-logic: #9b59b6;
+    --domain-data: #2ecc71;
+    --domain-network: #e67e22;
+    --domain-system: #e74c3c;
+    --process-bg: #34495e;
+    --cell-bg: #ffffff;
+    --cell-hover: #f1f8ff;
+}
+
+body {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+h1 {
+    color: var(--header-bg);
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+p.subtitle {
+    font-size: 1.2rem;
+    color: #666;
+}
+
+.matrix-container {
+    display: grid;
+    grid-template-columns: 150px repeat(5, 1fr);
+    gap: 15px;
+    overflow-x: auto;
+    padding-bottom: 20px;
+}
+
+/* Headers */
+.header-cell {
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: white;
+}
+
+.corner-cell {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.domain-vision {
+    background-color: var(--domain-vision);
+}
+
+.domain-logic {
+    background-color: var(--domain-logic);
+}
+
+.domain-data {
+    background-color: var(--domain-data);
+}
+
+.domain-network {
+    background-color: var(--domain-network);
+}
+
+.domain-system {
+    background-color: var(--domain-system);
+}
+
+.process-cell {
+    background-color: var(--process-bg);
+    color: white;
+    justify-content: flex-start;
+    padding-top: 25px;
+}
+
+.process-cell svg {
+    width: 40px;
+    height: 40px;
+    fill: white;
+    margin-bottom: 5px;
+}
+
+/* Data Cells */
+.data-cell {
+    background-color: var(--cell-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 15px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    text-decoration: none; /* Added for anchor tag support */
+    color: inherit; /* Added for anchor tag support */
+}
+
+.data-cell:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    border-color: #bbb;
+}
+
+.data-cell::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+}
+
+.col-A .data-cell::before, .data-cell.col-A::before {
+    background-color: var(--domain-vision);
+}
+
+.col-B .data-cell::before, .data-cell.col-B::before {
+    background-color: var(--domain-logic);
+}
+
+.col-C .data-cell::before, .data-cell.col-C::before {
+    background-color: var(--domain-data);
+}
+
+.col-D .data-cell::before, .data-cell.col-D::before {
+    background-color: var(--domain-network);
+}
+
+.col-E .data-cell::before, .data-cell.col-E::before {
+    background-color: var(--domain-system);
+}
+
+.term {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: #2c3e50;
+}
+
+.child-term {
+    color: #555;
+    /* Neutral professional color */
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.desc {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.4;
+}
+
+/* SVG Icons Styling */
+.icon {
+    width: 40px;
+    height: 40px;
+    fill: currentColor;
+}
+
+@media (max-width: 1024px) {
+    .matrix-container {
+        grid-template-columns: 100px repeat(5, 200px);
+    }
+}

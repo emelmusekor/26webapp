@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>심해 음파 탐지 (Ocean Sonar)</title>
+
+    <style>
+        body {
+            background-color: #001f3f;
+            color: #7fdbff;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .sonar-screen {
+            background: radial-gradient(circle, #001f3f, #000);
+            border: 4px solid #7fdbff;
+            border-radius: 10px;
+            /* Square for scroll */
+            width: 700px;
+            height: 500px;
+            /* Viewport Height */
+            margin: 20px auto;
+            position: relative;
+            overflow: auto;
+            /* Native Scroll */
+            box-shadow: 0 0 50px rgba(0, 191, 255, 0.3);
+            /* Custom Scrollbar */
+            scrollbar-width: thin;
+            scrollbar-color: #00cca3 #001f3f;
+        }
+
+        .sonar-screen::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+
+        .sonar-screen::-webkit-scrollbar-track {
+            background: #001f3f;
+        }
+
+        .sonar-screen::-webkit-scrollbar-thumb {
+            background-color: #00cca3;
+            border-radius: 6px;
+            border: 3px solid #001f3f;
+        }
+
+        /* Grid Overlay */
+        .grid-layer {
+            position: relative;
+            /* Scrolls inside */
+            /* width/height set by js */
+        }
+
+        .radar-sweep {
+            position: fixed;
+            /* Fixed within the container context? No, fixed to screen. Needs to be sticky? */
+            /* Radar sweep is nice but hard to do with scroll. Let's make it a fixed overlay pointer-events-none */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200%;
+            /* Cover large area */
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent 0deg, transparent 300deg, rgba(0, 255, 0, 0.1) 360deg);
+            transform: translate(-50%, -50%);
+            animation: sweep 4s infinite linear;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        @keyframes sweep {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .hud {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            display: inline-block;
+            border: 2px solid #7fdbff;
+            padding: 10px 30px;
+            margin: 0 10px;
+            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .msg-log {
+            height: 30px;
+            color: #ffdc00;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+
+    <link rel="stylesheet" href="css/detail.css">
+    <link rel="stylesheet" href="css/tasks/C1.css">
+</head>
+
+<body>
+    <div id="content-wrappper" style="max-width:800px; margin:0 auto; padding:20px;">
+        <div id="task-stage"></div>
+    </div>
+    <script src="js/data/curriculum_data.js?v=10"></script>
+    <script src="js/data/levels/C1_levels.js?v=10"></script>
+    <script src="js/tasks/C1.js?v=10"></script>
+</body>
+
+</html>

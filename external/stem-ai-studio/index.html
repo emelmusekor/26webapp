@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Studio STEM 실험실</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #172033;
+        --muted: #64748b;
+        --line: #dbe5f2;
+        --blue: #2b6eea;
+        --green: #2d9d64;
+        --paper: #ffffff;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        font-family: Pretendard, "Segoe UI", Arial, sans-serif;
+        color: var(--ink);
+        background: #f6f9fd;
+      }
+
+      .studio-shell {
+        height: 100vh;
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        min-height: 0;
+      }
+
+      .studio-rail {
+        min-height: 0;
+        display: grid;
+        grid-template-rows: auto 1fr;
+        gap: 12px;
+        padding: 16px;
+        border-right: 1px solid var(--line);
+        background: #ffffff;
+      }
+
+      .studio-rail h1 {
+        margin: 0;
+        font-size: 21px;
+      }
+
+      .studio-rail p {
+        margin: 6px 0 0;
+        color: var(--muted);
+        line-height: 1.45;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .app-list {
+        display: grid;
+        align-content: start;
+        gap: 8px;
+        overflow: auto;
+      }
+
+      .app-list button {
+        min-height: 48px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #f8fbff;
+        color: var(--ink);
+        text-align: left;
+        font-weight: 900;
+      }
+
+      .app-list button.active {
+        border-color: rgba(43, 110, 234, 0.5);
+        background: #edf4ff;
+        color: #244d89;
+      }
+
+      .studio-stage {
+        min-height: 0;
+        display: grid;
+        grid-template-rows: auto 1fr;
+      }
+
+      .stage-head {
+        min-height: 58px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--line);
+        background: #fbfdff;
+      }
+
+      .stage-head strong {
+        font-size: 18px;
+      }
+
+      .stage-head a {
+        min-height: 38px;
+        display: inline-grid;
+        place-items: center;
+        padding: 0 12px;
+        border-radius: 8px;
+        background: var(--blue);
+        color: #fff;
+        text-decoration: none;
+        font-weight: 900;
+      }
+
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        background: #fff;
+      }
+
+      @media (max-width: 860px) {
+        .studio-shell {
+          grid-template-columns: 1fr;
+          grid-template-rows: auto 1fr;
+        }
+
+        .studio-rail {
+          grid-template-rows: auto auto;
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .app-list {
+          grid-auto-flow: column;
+          grid-auto-columns: minmax(160px, 1fr);
+          overflow-x: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="studio-shell">
+      <aside class="studio-rail">
+        <div>
+          <h1>AI Studio STEM 실험실</h1>
+          <p>가져온 AI Studio 활동을 같은 조작 환경 안에서 실행합니다.</p>
+        </div>
+        <nav class="app-list" aria-label="AI Studio 활동 목록"></nav>
+      </aside>
+      <section class="studio-stage">
+        <header class="stage-head">
+          <strong id="currentTitle">태양계 시뮬레이터</strong>
+          <a id="openLink" href="apps/solar-system.html" target="_blank" rel="noreferrer">새 창</a>
+        </header>
+        <iframe id="appFrame" title="AI Studio 활동" src="apps/solar-system.html"></iframe>
+      </section>
+    </main>
+
+    <script>
+      const apps = [
+        ["태양계 시뮬레이터", "apps/solar-system.html"],
+        ["우주 탐험가", "apps/space-explorer.html"],
+        ["주사위 누적 합계", "apps/dice-sum.html"],
+        ["학생 데이터 실험", "apps/student-data.html"],
+        ["리듬 반응 게임", "apps/rhythm-game.html"],
+      ];
+
+      const list = document.querySelector(".app-list");
+      const frame = document.querySelector("#appFrame");
+      const title = document.querySelector("#currentTitle");
+      const openLink = document.querySelector("#openLink");
+
+      function setApp(index) {
+        const [label, src] = apps[index];
+        title.textContent = label;
+        frame.src = src;
+        openLink.href = src;
+        list.querySelectorAll("button").forEach((button, buttonIndex) => button.classList.toggle("active", buttonIndex === index));
+      }
+
+      apps.forEach(([label], index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = label;
+        button.addEventListener("click", () => setApp(index));
+        list.append(button);
+      });
+
+      frame.addEventListener("load", () => {
+        try {
+          const doc = frame.contentDocument;
+          const style = doc.createElement("style");
+          style.textContent = `
+            body { font-family: Pretendard, "Segoe UI", Arial, sans-serif !important; background: #f6f9fd !important; }
+            button, input, select, textarea { border-radius: 8px !important; font-family: inherit !important; }
+            .rounded-2xl, .rounded-3xl, .rounded-full { border-radius: 8px !important; }
+            .shadow-2xl, .shadow-xl, .shadow-lg { box-shadow: 0 18px 42px rgba(35, 52, 80, 0.14) !important; }
+          `;
+          doc.head.append(style);
+        } catch (error) {
+          // Same-origin files can be styled; remote restrictions are harmless here.
+        }
+      });
+
+      setApp(0);
+    </script>
+  </body>
+</html>

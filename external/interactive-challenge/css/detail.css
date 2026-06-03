@@ -1,0 +1,387 @@
+:root {
+    --primary: #3498db;
+    --secondary: #2c3e50;
+    --accent: #f1c40f;
+    --bg: #fdfdfd;
+    --card-bg: #fff;
+    --text: #333;
+}
+
+body {
+    font-family: 'Jua', 'Pretendard', sans-serif;
+    background-color: var(--bg);
+    margin: 0;
+    padding: 0;
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Nav */
+.nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.back-btn {
+    background: #eee;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-family: 'Jua', sans-serif;
+    transition: 0.2s;
+}
+
+.back-btn:hover {
+    background: #ddd;
+}
+
+/* Hero */
+.hero {
+    background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+    color: white;
+    padding: 40px 20px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(108, 92, 231, 0.2);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+
+.hero-icon {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    margin: 0 auto 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-icon svg {
+    width: 50px;
+    height: 50px;
+    fill: white;
+}
+
+h1 {
+    margin: 0;
+    font-size: 2.2rem;
+}
+
+.sub-title {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-top: 5px;
+}
+
+/* Tags */
+.tags {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    gap: 5px;
+}
+
+.tag {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+}
+
+/* Content Sections */
+.section {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid #eee;
+}
+
+.section-title {
+    font-size: 1.4rem;
+    color: var(--secondary);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.content-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #555;
+    white-space: pre-line;
+    /* Make sure newlines are respected */
+}
+
+/* New Concept/Difficulty Box Styles */
+.concept-box {
+    background: #eaf6fc;
+    /* Light Blue */
+    border: 1px solid #aed6f1;
+}
+
+.difficulty-box {
+    background: #fdebd0;
+    /* Light Orange */
+    border: 1px solid #f5cba7;
+}
+
+/* Activity Box */
+.activity-box {
+    background: #fff8e1;
+    border: 2px dashed #ffb74d;
+}
+
+.activity-header {
+    color: #f57c00;
+}
+
+/* Action Button */
+.game-btn {
+    display: inline-block;
+    width: auto;
+    min-width: 200px;
+    padding: 10px 30px;
+    background: #00cec9;
+    color: white;
+    text-align: center;
+    border-radius: 50px;
+    font-size: 1rem;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 4px 0 #00b894;
+    transition: transform 0.1s;
+    margin: 20px auto;
+}
+
+.game-btn:active {
+    transform: translateY(5px);
+    box-shadow: none;
+}
+
+.game-btn.disabled {
+    background: #b2bec3;
+    box-shadow: none;
+    cursor: default;
+    transform: none;
+}
+
+.loading {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 1.5rem;
+    color: #888;
+}
+
+/* Interactive Areas */
+.interactive-area {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    position: relative;
+    user-select: none;
+}
+
+/* Draggable Items */
+.draggable-item {
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 10px 15px;
+    cursor: grab;
+    transition: all 0.2s;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    display: inline-block;
+    margin: 5px;
+    color: #555;
+}
+
+.draggable-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    border-color: #3498db;
+}
+
+.draggable-item:active {
+    cursor: grabbing;
+    transform: scale(0.98);
+}
+
+.draggable-item.selected {
+    background: #e1f5fe;
+    border-color: #03a9f4;
+    color: #0277bd;
+    box-shadow: 0 0 0 3px rgba(3, 169, 244, 0.3);
+}
+
+/* Sorting List (Vertical) */
+.sort-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Allocation / Slots */
+.slot-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.drop-zone {
+    width: 120px;
+    height: 120px;
+    border: 3px dashed #ccc;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #f9f9f9;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 10px;
+}
+
+.drop-zone.drag-over {
+    border-color: #2ecc71;
+    background: #e8f8f5;
+    transform: scale(1.05);
+}
+
+.drop-zone .draggable-item {
+    margin: 0;
+    width: 80%;
+    font-size: 0.8rem;
+}
+
+/* Canvas / Graph */
+canvas {
+    border: 2px solid #eee;
+    border-radius: 10px;
+    background: #fff;
+    cursor: crosshair;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.02);
+}
+
+/* Maze */
+.maze-grid {
+    display: grid;
+    gap: 2px;
+    background: #333;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.maze-cell {
+    width: 50px;
+    height: 50px;
+    background: #eee;
+    cursor: pointer;
+    transition: background 0.1s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+}
+
+.maze-cell.wall {
+    background: #555;
+}
+
+.maze-cell.path {
+    background: #fff;
+}
+
+.maze-cell.start {
+    background: #2ecc71;
+    color: white;
+}
+
+.maze-cell.end {
+    background: #e74c3c;
+    color: white;
+}
+
+.maze-cell.player {
+    background: #f1c40f;
+    border-radius: 50%;
+}
+
+/* Feedback */
+.feedback-msg {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.feedback-msg.show {
+    opacity: 1;
+}
+
+.feedback-msg.correct {
+    background: #27ae60;
+}
+
+.feedback-msg.wrong {
+    background: #c0392b;
+}
+
+/* Text Input Area */
+.text-input-area {
+    width: 100%;
+    height: 100px;
+    padding: 15px;
+    font-size: 1.1rem;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    resize: none;
+    font-family: inherit;
+}
+
+.text-input-area:focus {
+    outline: none;
+    border-color: var(--primary);
+}
