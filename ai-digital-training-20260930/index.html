@@ -467,40 +467,109 @@ linear-gradient(135deg,#fff 0%,#fff 62%,#f5f8ff 100%)}
 <div class="callout"><strong>한 번에 완성시키지 않는다.</strong><br/>초안 생성 → 문제 발견 → 조건 추가 → 실행 또는 대조 → 수정의 순환이 실제 작업에 가깝다.</div>
 </section>
 <section id="ovt">
-<div class="kicker">OVT</div>
-<h2>오케스트레이션 · 베리피케이션 · 트랜스퍼</h2>
+<div class="kicker">OVT · ORCHESTRATION / VERIFICATION / TRANSFER</div>
+<h2>AI와 함께 만들 때 남겨야 할 세 가지 기록</h2>
 <div class="grid3">
-<div class="card blue"><h3>O · Orchestration</h3><p><b>목표를 세우고 AI와 사람의 일을 배열한다.</b></p><p>도구 선택, 작업 분해, 순서 결정, 추가 질문, 중간 결과 활용.</p><p class="small">“한 번에 모든 과정을 묻기보다 실제 화면을 보면서 막히는 부분을 하나씩 질문했다.”</p></div>
-<div class="card green"><h3>V · Verification</h3><p><b>AI의 말을 다시 AI에게 묻는 것으로 끝내지 않는다.</b></p><p>직접 실행, 다른 자료와 대조, 예외 입력, 여러 기기 테스트, 수정 반영 확인.</p><p class="small">웹앱 주소에 접속해 버튼과 입력 기능을 사용하고 휴대전화에서도 확인한 사례.</p></div>
-<div class="card amber"><h3>T · Transfer</h3><p><b>이 문제에서 얻은 전략을 다음 문제에 옮긴다.</b></p><p>원리 추출, 적용 조건 파악, 다른 과제·교과·프로젝트로 재사용.</p><p class="small">로컬 HTML과 웹 호스팅의 차이를 이해하고 다른 프로젝트의 결과 공유에 같은 방식을 적용.</p></div>
+<div class="card blue"><h3>O · Orchestration</h3><p><b>무엇을 만들지 정하고 일을 나눈다.</b></p><p>기본 기능부터 시작하고, 필요한 기능을 하나씩 추가한다. AI가 제시한 방법 중 무엇을 채택하고 버릴지도 정한다.</p><p class="small">남길 것: 목표 · 기능 우선순위 · AI에게 맡긴 일 · 내가 바꾼 방향</p></div>
+<div class="card green"><h3>V · Verification</h3><p><b>직접 실행해서 맞는지 확인한다.</b></p><p>정상 입력만 보지 않는다. 경계값, 잘못된 입력, 충돌, 다른 브라우저와 기기까지 확인하고 수정 후 다시 실행한다.</p><p class="small">남길 것: 테스트한 조건 · 발견한 오류 · 수정 내용 · 재검증 결과</p></div>
+<div class="card amber"><h3>T · Transfer</h3><p><b>이번에 익힌 방법을 다른 문제에 다시 쓴다.</b></p><p>코드 한 조각을 복사하는 데서 끝나지 않는다. 작업 순서, 테스트 방법, 게임 구조, 배포 방법처럼 다시 쓸 수 있는 전략을 뽑는다.</p><p class="small">남길 것: 재사용할 원리 · 적용할 새 과제 · 바뀌어야 할 조건</p></div>
 </div>
+
+<div class="flow" style="margin-top:26px">
+<div class="step">O<br/><span class="small">목표·역할·순서</span></div><div class="arrow">→</div>
+<div class="step">제작</div><div class="arrow">→</div>
+<div class="step">V<br/><span class="small">실행·대조·반례</span></div><div class="arrow">→</div>
+<div class="step">오류 발견</div><div class="arrow">↩</div>
+<div class="step">O<br/><span class="small">요청·설계 수정</span></div><div class="arrow">→</div>
+<div class="step">V</div><div class="arrow">→</div>
+<div class="step">T<br/><span class="small">다른 문제에 적용</span></div>
+</div>
+
 <div class="hr"></div>
-<h3>웹앱 제작 사례</h3>
-<div class="flow">
-<div class="step">주제를 정함</div><div class="arrow">→</div>
-<div class="step">AI로 단일 HTML 제작</div><div class="arrow">→</div>
-<div class="step">실행하며 오류 발견</div><div class="arrow">→</div>
-<div class="step">오류 상황을 다시 전달</div><div class="arrow">→</div>
-<div class="step">GitHub Pages 공개</div><div class="arrow">→</div>
-<div class="step">다른 기기에서 재검증</div>
-</div>
-<div class="grid2">
-<div class="card"><h3>오케스트레이션이 드러나는 기록</h3><ul><li>어떤 문제를 AI에게 맡겼는가</li><li>왜 그 도구와 방법을 선택했는가</li><li>요청을 어떻게 나눴는가</li><li>어디에서 사람이 방향을 바꿨는가</li></ul></div>
-<div class="card"><h3>베리피케이션이 드러나는 기록</h3><ul><li>어떤 기능을 직접 실행했는가</li><li>무슨 오류를 발견했는가</li><li>어떤 자료와 교차 확인했는가</li><li>수정 후 무엇을 다시 확인했는가</li></ul></div>
-</div>
-<div class="grid3" style="margin-top:18px">
-<div class="card flat"><span class="tag">O → V</span><h3>없는 정보가 섞인 추천</h3><p>게임 아이템 추천 앱에서 실제로 존재하지 않는 아이템과 특성이 제시되었다. 결과를 그대로 다듬는 대신 문제를 발견하고 다른 프로그램으로 방향을 바꿨다.</p></div>
-<div class="card flat"><span class="tag">V</span><h3>맞춤법 게임의 하트 오류</h3><p>틀린 맞춤법을 눌러도 하트가 줄지 않는 문제를 직접 실행으로 확인했다. 올바른 조건을 다시 확인해 코드를 수정하고 재실행했다.</p></div>
-<div class="card flat"><span class="tag">V → T</span><h3>룰렛의 예외값</h3><p>겉보기에는 정상인 코드도 입력 경우의 수에 따라 undefined가 발생할 수 있음을 반복 테스트로 확인했다. 이후 데이터 분석과 다른 웹앱에서도 같은 검증 전략을 적용할 수 있다고 정리했다.</p></div>
-</div>
-<div class="practice">
-<div class="label">기록</div><h3>결과가 아니라 결정과 확인을 남긴다</h3>
+<h3>사례 1 · 처음 만든 웹앱을 GitHub Pages로 공개</h3>
+<div class="tablewrap"><table>
+<thead><tr><th style="width:16%">OVT</th><th>실제로 한 일</th><th>남는 증거</th></tr></thead>
+<tbody>
+<tr><td><b>O</b></td><td>웹앱을 인터넷에 올리는 방법을 AI에게 물었다. 무료 호스팅 방법 중 GitHub Pages를 선택했다. 저장소 만들기 → index.html 올리기 → Pages 설정 순서로 진행하고, 화면에서 막히는 지점마다 다시 질문했다.</td><td>도구 선택 이유, 작업 순서, 막힌 화면에서 추가한 질문</td></tr>
+<tr><td><b>V</b></td><td>배포된 URL을 직접 열었다. 로컬 파일과 같은 화면인지 확인하고 버튼과 입력 기능을 사용했다. 휴대전화에서도 접속하고, 코드를 수정한 뒤 공개 주소에 변경 내용이 반영됐는지 다시 확인했다.</td><td>공개 URL, PC/휴대전화 테스트, 수정 전후 화면</td></tr>
+<tr><td><b>T</b></td><td>‘HTML 파일을 만든다 → 공개 저장소에 올린다 → Pages로 배포한다 → 다른 기기에서 확인한다’는 순서를 다른 웹앱에도 그대로 적용할 수 있게 됐다.</td><td>다른 프로젝트에 재사용할 배포 절차</td></tr>
+</tbody></table></div>
+
+<h3 style="margin-top:28px">사례 2 · 계산기에서 테트리스로 방향을 바꾼 뒤 기능을 확장</h3>
+<div class="tablewrap"><table>
+<thead><tr><th style="width:16%">OVT</th><th>실제로 한 일</th><th>확인할 지점</th></tr></thead>
+<tbody>
+<tr><td><b>O</b></td><td>처음에는 계산기를 실행했다. 이후 테트리스로 주제를 바꾸고 방향키 이동, 블록 회전, 다음 블록 미리보기, 점수판, 일시정지 기능을 포함하도록 요청했다. 완성본을 한 번에 받는 대신 실행 결과를 보며 추가할 기능을 정했다.</td><td>주제 변경의 이유, 추가 기능의 우선순위</td></tr>
+<tr><td><b>V</b></td><td>방향키를 하나씩 눌렀다. 회전할 때 벽 밖으로 나가는지, 다른 블록과 겹치는지, 한 줄이 채워지면 사라지는지, 점수가 올라가는지 반복해서 확인했다. 일부러 실패 상황을 만들어 게임 종료도 확인했다.</td><td>정상 동작 + 경계 상황 + 실패 상황</td></tr>
+<tr><td><b>T</b></td><td>‘기본 기능을 먼저 실행 → 기능을 하나씩 추가 → 추가할 때마다 다시 테스트’하는 순서를 다른 게임과 웹앱 제작에도 사용할 수 있다.</td><td>점진적 개발 + 반복 테스트 전략</td></tr>
+</tbody></table></div>
+
+<h3 style="margin-top:28px">사례 3 · 계산기 코드에서 <code>eval</code>을 발견하고 다시 설계</h3>
 <div class="grid3">
-<textarea class="notearea" data-store="ovt-o" placeholder="O: 내가 목표를 정하고 작업을 나눈 지점"></textarea>
-<textarea class="notearea" data-store="ovt-v" placeholder="V: 내가 직접 확인·실행·대조한 지점"></textarea>
-<textarea class="notearea" data-store="ovt-t" placeholder="T: 다른 문제에 옮길 수 있는 원리·전략"></textarea>
+<div class="card blue"><span class="tag">O</span><h3>기능뿐 아니라 구현 방법도 바꾼다</h3><p>HTML·CSS·JavaScript가 한 파일에 들어간 계산기를 먼저 만들었다. 코드에 <code>eval</code>이 포함된 것을 확인하고 더 안전한 계산 로직으로 바꾸도록 요청했다. 마우스 입력 뒤에는 키보드 숫자·Enter·Backspace도 추가했다.</p></div>
+<div class="card green"><span class="tag">V</span><h3>정답만 보지 않고 예외까지 넣는다</h3><p>덧셈·뺄셈·곱셈·나눗셈을 여러 번 계산했다. 키보드 입력도 확인했다. 일부러 잘못된 수식을 넣어 오류 메시지가 뜨는지 확인했다.</p></div>
+<div class="card amber"><span class="tag">T</span><h3>다음 프로그램에서도 같은 순서를 쓴다</h3><p>기본 기능을 먼저 만들고 세부 기능을 순서대로 요청한다. 오류가 생기면 상황을 구체적으로 전달하고, 수정 뒤에는 반드시 다시 실행한다.</p></div>
 </div>
+
+<h3 style="margin-top:28px">사례 4 · 스네이크 게임의 구조를 다른 게임으로 옮김</h3>
+<div class="grid2">
+<div class="card"><h3>작업을 기능으로 분해</h3><p>스네이크 게임을 <b>조작 로직 · 충돌 판정 · 점수 시스템 · 화면 그리기</b>로 나눴다. 벽 충돌과 자기 몸 충돌에서 게임이 끝나는지 확인했다.</p><p class="small">O: 기능 분해 → V: 충돌 규칙 실행</p></div>
+<div class="card"><h3>구조를 재사용</h3><p>Canvas 기반 <b>그리기 함수 · 게임 루프 · 충돌 판정</b>을 벽돌깨기나 틱택토 같은 다른 게임에 다시 사용할 수 있다고 정리했다.</p><p class="small">T: 결과물이 아니라 프로그램 구조를 옮김</p></div>
 </div>
+
+<h3 style="margin-top:28px">사례 5 · 레이싱 게임에서 후진 충돌 오류를 찾음</h3>
+<div class="grid2">
+<div class="card flat"><h4>기능 설계</h4><p>방향키 조작, SHIFT 드리프트, CTRL 부스터, 트랙, 랩타임을 먼저 정했다. 이후 차량 움직임, 벽 충돌, 랩 판정, 카운트다운, 출발 부스터, 일시정지, 재시작을 순서대로 추가했다.</p></div>
+<div class="card flat"><h4>오류를 재현</h4><p>전진 충돌은 정상적으로 튕겼지만 후진 충돌에서는 같은 동작이 나오지 않는 오류를 발견했다. 수정 뒤 다시 같은 상황을 만들어 정상 작동을 확인했다.</p></div>
+</div>
+
+<div class="hr"></div>
+<h3>OVT 기록은 이렇게 달라진다</h3>
+<div class="tablewrap"><table>
+<thead><tr><th></th><th>짧은 기록</th><th>판단이 보이는 기록</th></tr></thead>
+<tbody>
+<tr><td><b>O</b></td><td>“AI에게 테트리스를 만들어 달라고 했다.”</td><td>“계산기에서 테트리스로 주제를 바꿨다. 이동·회전·점수 기능을 먼저 두고, 실행한 뒤 미리보기와 일시정지를 추가했다.”</td></tr>
+<tr><td><b>V</b></td><td>“게임이 잘 되는지 확인했다.”</td><td>“회전 시 벽을 통과하는지, 블록이 겹치는지, 한 줄 제거와 점수 계산이 맞는지, 실패 상황에서 종료되는지 직접 만들며 확인했다.”</td></tr>
+<tr><td><b>T</b></td><td>“다른 프로그램에도 활용할 수 있다.”</td><td>“기본 기능 → 추가 기능 → 재실행 순서를 다음 웹앱에도 적용한다. Canvas의 게임 루프와 충돌 판정은 다른 게임에서도 재사용한다.”</td></tr>
+</tbody></table></div>
+
+<div class="grid3" style="margin-top:18px">
+<div class="card flat"><span class="tag">O → V</span><h3>없는 정보가 섞인 추천</h3><p>실제로 존재하지 않는 게임 아이템과 특성이 섞였다. 결과를 다듬는 대신 방향을 바꾸고 다른 프로그램을 만들었다.</p></div>
+<div class="card flat"><span class="tag">V</span><h3>맞춤법 게임의 하트 오류</h3><p>틀린 맞춤법을 눌러도 하트가 줄지 않았다. 조건식을 수정한 뒤 같은 오답을 다시 눌러 확인했다.</p></div>
+<div class="card flat"><span class="tag">V → T</span><h3>룰렛의 예외값</h3><p>특정 입력에서 <code>undefined</code>가 나오는 경우를 찾았다. 이후 다른 웹앱과 데이터 처리에서도 정상값뿐 아니라 예외값을 넣어 보기로 했다.</p></div>
+</div>
+
+<div class="practice">
+<div class="label">OVT 기록</div><h3>한 작업을 O·V·T로 다시 적는다</h3>
+<div class="grid3">
+<textarea class="notearea" data-store="ovt-o" placeholder="O: 처음 목표 / AI에게 맡긴 일 / 내가 바꾼 방향 / 기능을 추가한 순서"></textarea>
+<textarea class="notearea" data-store="ovt-v" placeholder="V: 정상 입력 / 경계값 / 실패 상황 / 다른 기기 / 수정 뒤 재검증"></textarea>
+<textarea class="notearea" data-store="ovt-t" placeholder="T: 다음 과제에 다시 쓸 작업 순서 / 테스트 방법 / 코드 구조 / 배포 방법"></textarea>
+</div>
+<div class="prompt" id="pOVTReview">다음 작업 기록을 OVT로 정리해줘.
+
+[내 작업 기록]
+
+O · Orchestration
+- 목표를 어떻게 정했는가
+- 작업을 어떤 순서로 나눴는가
+- AI에게 맡긴 일과 직접 판단한 일은 무엇인가
+- 중간에 방향을 바꾼 지점은 어디인가
+
+V · Verification
+- 실제로 무엇을 실행했는가
+- 정상·경계·예외 상황을 어떻게 확인했는가
+- 어떤 오류를 발견했고 어떻게 수정했는가
+- 수정 뒤 같은 조건으로 다시 확인했는가
+
+T · Transfer
+- 다른 과제에도 다시 쓸 수 있는 작업 전략은 무엇인가
+- 재사용할 코드·구조·테스트·배포 방법은 무엇인가
+- 다른 문제에서는 어떤 조건을 바꿔야 하는가
+
+추상적인 칭찬은 빼고 실제 행동만 정리해줘.<button class="copy" data-copy="pOVTReview">복사</button></div>
+</div>
+<div class="sourcebar">학생 사례: 2026년 2학기 AI창의컴퓨팅 수업의 웹앱 제작·Padlet OVT 기록. 개인정보 보호를 위해 이름과 학번은 표시하지 않았다.</div>
 </section>
 <section id="verify">
 <div class="kicker">VERIFICATION</div>
@@ -541,10 +610,71 @@ linear-gradient(135deg,#fff 0%,#fff 62%,#f5f8ff 100%)}
 </section>
 <section id="curriculum">
 <div class="kicker">CURRICULUM &amp; ASSESSMENT</div>
-<h2>AI가 쉽게 완성하는 과제는 학생의 판단이 보이도록 바꾼다</h2>
+<h2>교육과정·성취평가·대입 변화에 맞춰 평가 증거를 다시 설계한다</h2>
 <div class="grid2">
 <div class="card blue"><h3>2022 개정 교육과정</h3><p>2026년 3월부터 초등 5·6학년, 중학교 2학년, 고등학교 2학년까지 적용된다.</p><p>디지털 전환, 학생의 주도성, 깊이 있는 학습, 과정과 수행의 증거를 수업 설계와 연결한다.</p><p class="small"><a href="https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=141&amp;boardSeq=93458&amp;lev=0" target="_blank">교육부 고시 제2022-33호</a></p></div>
 <div class="card purple"><h3>2028 대입 체제</h3><p>국어·수학·사회·과학의 선택과목 없는 통합형 수능, 고교 내신 5등급 체제가 확정되어 있다.</p><p>평가 자료에는 <b>근거, 설명, 수정 기록, 조건을 바꿨을 때의 적용</b>을 함께 남긴다.</p><p class="small"><a href="https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=294&amp;boardSeq=97551" target="_blank">교육부 2028 대학입시제도 개편 확정안</a></p></div>
+</div>
+<div class="hr"></div>
+<div id="achievement-assessment">
+<div class="kicker">ACHIEVEMENT STANDARDS-BASED ASSESSMENT</div>
+<h2>성취평가제: 다른 학생보다 몇 등인가보다 무엇을 할 수 있는가</h2>
+<p class="lead">성취기준에 비추어 학생이 <b>무엇을 어느 정도 수행할 수 있는지</b> 판단한다. 평가문항·수행과제·채점기준을 성취기준과 연결하고, 결과는 다음 학습과 피드백에 사용한다.</p>
+
+<div class="flow" style="margin-top:22px">
+<div class="step">성취기준<br/><span class="small">학생이 무엇을 해야 하나</span></div><div class="arrow">→</div>
+<div class="step">평가과제<br/><span class="small">어떤 수행으로 확인하나</span></div><div class="arrow">→</div>
+<div class="step">평가기준<br/><span class="small">어느 수준이면 충분한가</span></div><div class="arrow">→</div>
+<div class="step">성취수준<br/><span class="small">A·B·C·D·E 등</span></div><div class="arrow">→</div>
+<div class="step">피드백<br/><span class="small">다음에 무엇을 보완하나</span></div>
+</div>
+
+<div class="grid3" style="margin-top:22px">
+<div class="card blue"><h3>성취기준</h3><p>교육과정에서 학생에게 요구하는 지식·기능·태도와 수행을 확인한다.</p><p class="small">예: “자료를 비교하여 근거를 들어 판단한다.”</p></div>
+<div class="card green"><h3>평가 증거</h3><p>완성본만 받지 않고 비교 기준, 근거, 수정 기록, 설명을 함께 받는다.</p><p class="small">AI가 만든 결과와 학생의 성취를 구분한다.</p></div>
+<div class="card amber"><h3>성취수준</h3><p>같은 과제를 누가 더 잘했는지 줄 세우기보다 정해 둔 기준에 어느 정도 도달했는지 판단한다.</p><p class="small">과목에 따라 A-B-C-D-E, A-B-C, P 등의 방식이 사용된다.</p></div>
+</div>
+
+<h3 style="margin-top:28px">AI가 만든 결과와 학생의 성취를 구분한다</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>성취기준의 동사</th><th>AI가 대신하기 쉬운 것</th><th>학생에게 받을 증거</th></tr></thead>
+<tbody>
+<tr><td><b>설명한다</b></td><td>개념 설명문 생성</td><td>AI 설명에서 핵심을 골라 자기 말로 설명하고 비예시를 제시</td></tr>
+<tr><td><b>비교한다</b></td><td>두 자료의 차이 표 만들기</td><td>비교 기준을 직접 정하고 어떤 차이가 중요한지 근거와 함께 판단</td></tr>
+<tr><td><b>분석한다</b></td><td>자료 요약·패턴 제시</td><td>분석 기준, 제외한 자료, 다른 해석 가능성, 한계를 설명</td></tr>
+<tr><td><b>설계한다</b></td><td>수업안·프로그램 초안 생성</td><td>채택·삭제·수정한 요소와 그 이유, 테스트 결과를 함께 제출</td></tr>
+<tr><td><b>적용한다</b></td><td>유사 문제 풀이</td><td>조건을 바꾼 새 문제에서 같은 원리의 적용 여부를 판단하고 설명</td></tr>
+</tbody></table></div>
+
+<h3 style="margin-top:28px">2025학년도 고1부터: 성취도와 석차등급을 함께 본다</h3>
+<div class="grid2">
+<div class="card purple"><h3>성취도</h3><p>2022 개정 교육과정 적용 고등학교의 보통교과·전문교과는 원칙적으로 <b>성취도 A-B-C-D-E</b>를 산출한다.</p><p>사회·과학 융합선택은 A-B-C-D-E 성취도를 기록하지만 석차등급은 산출하지 않는다. 과학탐구실험과 체육·예술은 A-B-C, 교양은 이수 여부를 기록하는 등 예외가 있다.</p></div>
+<div class="card red"><h3>석차등급</h3><p>2025학년도 고교 신입생부터 보통교과·전문교과의 상당수 과목에서 <b>1~5등급 석차등급</b>을 성취도와 함께 기록한다.</p><p>2028학년도 대입에서는 이 5등급 내신 체제가 처음 반영된다.</p></div>
+</div>
+
+<div class="tablewrap" style="margin-top:18px"><table>
+<thead><tr><th>구분</th><th>성취도</th><th>석차등급</th><th>수업에서 확인할 것</th></tr></thead>
+<tbody>
+<tr><td>보통교과 일반 과목</td><td>A-B-C-D-E</td><td>1~5등급</td><td>성취기준 도달 정도와 수행 증거</td></tr>
+<tr><td>사회·과학 융합선택</td><td>A-B-C-D-E</td><td>미산출</td><td>탐구·판단·적용의 성취수준</td></tr>
+<tr><td>과학탐구실험·체육·예술</td><td>A-B-C</td><td>미산출</td><td>교과 특성에 맞는 수행</td></tr>
+<tr><td>교양</td><td>P</td><td>미산출</td><td>이수 여부</td></tr>
+</tbody></table></div>
+
+<h3 style="margin-top:28px">고교학점제에서는 ‘이수’도 성취와 연결된다</h3>
+<div class="grid2">
+<div class="card flat"><h4>과목출석률</h4><p>2025학년도 고1부터 학점 취득을 위해 과목별 출석을 관리한다. 학교생활기록부 안내에서는 <b>과목출석률 2/3</b>을 학점 이수 판단 기준으로 다룬다.</p></div>
+<div class="card flat"><h4>최소 성취수준</h4><p><b>학업성취율 40%</b> 기준과 최소 성취수준 보장지도가 함께 운영된다. 미도달 학생에게 추가 학습과 보충 지도를 제공하고 이수 여부를 처리한다.</p></div>
+</div>
+
+<div class="callout"><strong>평가문항을 만들 때 먼저 성취기준의 동사를 본다.</strong><br/>‘설명한다’면 설명을, ‘비교한다’면 비교 기준과 판단을, ‘설계한다’면 선택·수정·검증의 증거를 받는다. AI가 만든 완성본만으로 성취수준을 판단하지 않는다.</div>
+
+<div class="linkgrid">
+<a class="linkcard" href="https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=294&boardSeq=97551&lev=0&m=020402&opType=N&s=moe&statusYN=W" target="_blank" rel="noopener"><div class="source">교육부</div><h3>2028 대학입시제도 개편 확정안</h3><p>통합형 수능과 고교 내신 5등급 체제 확정 내용을 확인한다.</p><span class="open">공식 자료 열기 ↗</span></a>
+<a class="linkcard" href="https://star.moe.go.kr/web/contents/m30103.do?id=116632&schM=view" target="_blank" rel="noopener"><div class="source">학교생활기록부 종합지원포털 · 2026</div><h3>2026 고등학교 성적 산출 방식</h3><p>A-B-C-D-E 성취도, 1~5등급 석차등급, 과목별 예외를 확인한다.</p><span class="open">공식 안내 열기 ↗</span></a>
+<a class="linkcard" href="https://star.moe.go.kr/web/contents/m30103.do?id=81578&schM=view" target="_blank" rel="noopener"><div class="source">학교생활기록부 종합지원포털</div><h3>학점 이수와 최소 성취수준</h3><p>과목출석률, 학업성취율 40%, 최소 성취수준 보장지도의 처리 기준을 확인한다.</p><span class="open">공식 안내 열기 ↗</span></a>
+<a class="linkcard" href="https://www.moe.go.kr/mnstrVedioView.do?boardID=409&boardSeq=101576&lev=0" target="_blank" rel="noopener"><div class="source">교육부</div><h3>고교학점제 A to Z</h3><p>학업 성취도 평가, 최소 성취수준, 대입 반영을 영상으로 확인한다.</p><span class="open">영상 안내 열기 ↗</span></a>
+</div>
 </div>
 <h3 style="margin-top:28px">과제를 바꾸는 네 방향</h3>
 <div class="tablewrap"><table>
