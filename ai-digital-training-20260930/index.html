@@ -7,11 +7,11 @@
 <title>교과별 AI·디지털 수업 실천 | 생성형 AI에서 에이전트까지</title>
 <style>
 :root{
-  --bg:#f3f5f8; --paper:#fff; --ink:#151b2a; --muted:#677184; --line:#dfe4ec;
-  --navy:#12213f; --blue:#2557d6; --blue2:#eef3ff; --green:#12704a; --green2:#edf8f2;
-  --amber:#8b5a00; --amber2:#fff7e4; --red:#b42318; --red2:#fff0ee; --purple:#6437c7; --purple2:#f4efff;
-  --cyan:#046c7a; --cyan2:#ecf9fb; --shadow:0 14px 35px rgba(22,34,60,.08);
-  --radius:18px;
+ --bg:#f3f5f8; --paper:#fff; --ink:#151b2a; --muted:#677184; --line:#dfe4ec;
+ --navy:#12213f; --blue:#2557d6; --blue2:#eef3ff; --green:#12704a; --green2:#edf8f2;
+ --amber:#8b5a00; --amber2:#fff7e4; --red:#b42318; --red2:#fff0ee; --purple:#6437c7; --purple2:#f4efff;
+ --cyan:#046c7a; --cyan2:#ecf9fb; --shadow:0 14px 35px rgba(22,34,60,.08);
+ --radius:18px;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -134,18 +134,49 @@ details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:
 .socialstrip{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.socialstrip a{display:inline-block;text-decoration:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 13px;color:var(--ink);font-size:13px;font-weight:800}.socialstrip a:hover{border-color:var(--blue);color:var(--blue)}
 @media(max-width:900px){.linkgrid{grid-template-columns:1fr}}
 
+
+/* training cover modal */
+.cover-modal{position:fixed;inset:0;background:rgba(8,15,31,.74);z-index:9999;display:none;align-items:center;justify-content:center;padding:28px;backdrop-filter:blur(5px)}
+.cover-modal.show{display:flex}
+.cover-sheet{position:relative;width:min(920px,94vw);aspect-ratio:16/9;background:#fff;border-radius:24px;box-shadow:0 28px 80px rgba(0,0,0,.36);overflow:hidden;border:1px solid rgba(255,255,255,.35)}
+.cover-sheet:before{content:"";position:absolute;inset:0;background:
+radial-gradient(circle at 80% 45%,rgba(32,94,190,.15),transparent 23%),
+radial-gradient(circle at 83% 47%,rgba(240,65,147,.16),transparent 13%),
+linear-gradient(135deg,#fff 0%,#fff 62%,#f5f8ff 100%)}
+.cover-content{position:absolute;inset:0;padding:7.5% 8%;display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
+.cover-index{font-size:clamp(20px,2.6vw,36px);font-weight:800;color:#1685a8;margin-bottom:26px}
+.cover-title{font-size:clamp(32px,5vw,66px);line-height:1.12;font-weight:900;color:#60351c;letter-spacing:-.04em}
+.cover-name{margin-top:54px;border:5px solid #111;padding:18px 72px;font-size:clamp(24px,3.4vw,42px);font-weight:800;background:rgba(255,255,255,.88)}
+.cover-badge{position:absolute;right:7%;top:17%;width:23%;aspect-ratio:1/1;border-radius:50%;background:conic-gradient(from 20deg,#1e5aa8,#ff72b5,#87e2e0,#1e5aa8);opacity:.9}
+.cover-badge:after{content:"AI · DIGITAL";position:absolute;inset:19%;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:900;color:#1e5aa8;font-size:clamp(16px,2vw,28px);line-height:1.1}
+.cover-close{position:absolute;right:18px;top:18px;z-index:4;border:0;background:#111;color:#fff;width:42px;height:42px;border-radius:50%;font-size:22px;cursor:pointer}
+.cover-foot{position:absolute;left:8%;bottom:6%;font-size:13px;font-weight:700;color:#687184;letter-spacing:.02em}
+@media(max-width:700px){.cover-name{margin-top:30px;padding:12px 38px;border-width:3px}.cover-badge{opacity:.45}.cover-content{padding:9%}.cover-foot{font-size:10px}}
 </style>
 </head>
 <body>
 <div class="topbar">
 <div class="brand"><span class="brandmark"></span><strong>교과별 AI·디지털 수업 실천</strong></div>
 <div class="controls">
+<button class="btn" onclick="document.getElementById('coverModal').classList.add('show')">표지</button>
 <button class="btn hide-sm" id="focusBtn">집중 화면</button>
 <button class="btn hide-sm" onclick="window.print()">인쇄</button>
 <button class="btn primary" id="exportBtn">작성 내용 저장</button>
 </div>
 </div>
 <div class="progress" id="progress"></div>
+<div class="cover-modal" id="coverModal" onclick="if(event.target===this)this.classList.remove('show')">
+ <div class="cover-sheet" role="dialog" aria-modal="true" aria-label="연수 표지">
+ <button class="cover-close" aria-label="닫기" onclick="document.getElementById('coverModal').classList.remove('show')">×</button>
+ <div class="cover-badge"></div>
+ <div class="cover-content">
+ <div class="cover-index">1. 우리 학교 알아보기</div>
+ <div class="cover-title">AI·디지털 기반<br/>교육 혁신</div>
+ <div class="cover-name">김도용</div>
+ </div>
+ <div class="cover-foot">교육부 · 한국과학창의재단 · goorm</div>
+ </div>
+</div>
 <div class="shell">
 <aside>
 <div class="navgroup">AI와 작업</div>
@@ -175,23 +206,23 @@ details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:
 <section class="hero" id="start">
 <div class="kicker">GENERATIVE AI · OVT · AGENTIC WORKFLOW</div>
 <h1>GPT에서 AI 에이전트까지<br/>교과별 AI·디지털 수업 실천</h1>
-<p class="lead">AI가 결과물을 빠르게 만드는 환경에서는 결과 자체보다 <b>무엇을 맡겼는지, 무엇을 판단했는지, 무엇을 검증했는지, 무엇을 다른 문제로 옮겼는지</b>가 수업의 핵심 증거가 된다.</p>
+<p class="lead">AI와 함께 만든 결과에는 학생의 판단이 남아야 한다. <b>AI에게 맡긴 일, 직접 고른 기준, 확인한 근거, 다른 문제에 적용한 방법</b>을 기록한다.</p>
 <div class="grid4" style="margin-top:30px">
 <div class="card blue"><div class="num">O</div><h3>무엇을 맡길까</h3><p>목표를 정하고 작업을 쪼개며 AI와 사람의 역할을 배치한다.</p></div>
 <div class="card green"><div class="num">V</div><h3>무엇을 확인할까</h3><p>실행·대조·출처·반례를 통해 AI 결과의 품질을 확인한다.</p></div>
 <div class="card amber"><div class="num">T</div><h3>무엇을 옮길까</h3><p>한 과제에서 얻은 전략을 다른 교과·문제·상황에 적용한다.</p></div>
 <div class="card purple"><div class="num">A</div><h3>어디까지 맡길까</h3><p>에이전트가 여러 단계를 수행하더라도 중요한 판단 지점을 남긴다.</p></div>
 </div>
-<div class="quote">좋은 AI 수업의 기준은 “AI를 사용했는가”가 아니라 “학생의 판단이 어디에 남는가”이다.</div>
+<div class="quote"><b>AI가 한 일</b>과 <b>학생이 직접 판단한 일</b>을 구분해서 남긴다.</div>
 </section><section id="shift">
 <div class="kicker">FROM CHATBOT TO AGENTIC WORK</div>
 <h2>질문에 답하는 AI에서 목표를 수행하는 AI로</h2>
-<p class="lead">생성형 AI 활용의 단위가 한 번의 답변에서 파일·도구·여러 단계의 작업으로 넓어지면서, 사용자의 역할도 질문 작성에서 작업 설계와 검증으로 이동한다.</p>
+<p class="lead">생성형 AI는 질문에 답하는 데서 끝나지 않는다. 파일을 읽고, 검색하고, 계산하고, 코드를 실행하고, 여러 단계를 이어서 처리한다. 사람은 <b>목표·자료·조건·검증 기준</b>을 정한다.</p>
 <div class="grid4" style="margin-top:22px">
-<div class="card blue"><div class="num">1</div><h3>답변</h3><p>질문에 대한 설명, 요약, 번역, 아이디어를 얻는다.</p><p class="small"><b>사람의 일</b> 질문하고 결과를 읽는다.</p></div>
-<div class="card green"><div class="num">2</div><h3>제작</h3><p>문서·이미지·코드·표·활동지 등 실제 결과물을 함께 만든다.</p><p class="small"><b>사람의 일</b> 조건을 주고 반복 수정한다.</p></div>
-<div class="card amber"><div class="num">3</div><h3>도구 사용</h3><p>파일을 읽고, 검색하고, 계산하고, 코드를 실행해 중간 결과를 만든다.</p><p class="small"><b>사람의 일</b> 사용할 자료와 검증 기준을 정한다.</p></div>
-<div class="card purple"><div class="num">4</div><h3>작업 수행</h3><p>하나의 목표를 여러 단계로 나누고 중간 결과를 다음 작업에 연결한다.</p><p class="small"><b>사람의 일</b> 위임 범위와 개입 지점을 정한다.</p></div>
+<div class="card blue"><div class="num">1</div><h3>답변</h3><p>질문에 대한 설명, 요약, 번역, 아이디어를 얻는다.</p><p class="small"><b>직접 할 일</b> 질문하고 결과를 읽는다.</p></div>
+<div class="card green"><div class="num">2</div><h3>제작</h3><p>문서·이미지·코드·표·활동지 등 실제 결과물을 함께 만든다.</p><p class="small"><b>직접 할 일</b> 조건을 주고 반복 수정한다.</p></div>
+<div class="card amber"><div class="num">3</div><h3>도구 사용</h3><p>파일을 읽고, 검색하고, 계산하고, 코드를 실행해 중간 결과를 만든다.</p><p class="small"><b>직접 할 일</b> 사용할 자료와 검증 기준을 정한다.</p></div>
+<div class="card purple"><div class="num">4</div><h3>작업 수행</h3><p>하나의 목표를 여러 단계로 나누고 중간 결과를 다음 작업에 연결한다.</p><p class="small"><b>직접 할 일</b> 위임 범위와 개입 지점을 정한다.</p></div>
 </div>
 <div class="tablewrap" style="margin-top:22px"><table>
 <thead><tr><th></th><th>한 번의 생성</th><th>여러 단계의 작업</th></tr></thead>
@@ -220,19 +251,19 @@ details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:
 안내문은 전체 과정의 한 결과물로 포함해줘.<button class="copy" data-copy="pShift2">복사</button></div></div>
 </div>
 </div>
-<div class="callout"><strong>수업에서도 같은 변화가 일어난다.</strong><br/>답을 얻는 활동에서 끝내지 않고, 자료를 선택하고 → 생성물을 비교하고 → 검증하고 → 다른 조건에 다시 적용하는 흐름으로 설계한다.</div>
+<div class="callout"><strong>자료 선택 → 생성 → 비교 → 검증 → 조건을 바꿔 다시 적용</strong></div>
 </section>
 <section id="trends">
 <div class="kicker">AI LANDSCAPE · SEPTEMBER 2026</div>
-<h2>최근 AI의 변화는 더 큰 챗봇보다 ‘작업 시스템’에 가깝다</h2>
-<p class="lead">2026년의 중요한 변화는 모델 한 번의 응답 성능보다 <b>도구 연결, 작업 지속, 의사결정, 검증, 사람의 승인</b>을 어떻게 묶느냐에 있다. 하나의 모델이 모든 일을 처리하기보다 서로 다른 역할을 가진 모델·코드·도구를 조합하는 구조가 늘고 있다.</p>
+<h2>AI는 답변을 넘어 파일·도구·작업을 다룬다</h2>
+<p class="lead">2026년 AI 제품은 <b>도구 연결, 장기 작업, 의사결정, 검증, 사람 승인</b>을 한 흐름으로 묶고 있다. 생성 모델·결정 모델·코드·검색·브라우저를 역할에 따라 조합한다.</p>
 <div class="grid3" style="margin-top:24px">
-<div class="card blue"><span class="tag">Long-horizon agents</span><h3>몇 분에서 며칠까지 이어지는 작업</h3><p>에이전트는 한 번의 답변을 넘어 파일을 읽고, 코드를 실행하고, 중간 결과를 저장하며 다음 작업으로 이어간다. 최근 에이전트 플랫폼은 컨텍스트 관리와 하위 에이전트 조율까지 실행 환경의 일부로 다룬다.</p><p class="small"><b>수업에 주는 변화</b> 최종 산출물보다 중간 판단·수정·작업 기록이 중요해진다.</p></div>
-<div class="card green"><span class="tag">Computer use</span><h3>화면을 보고 직접 조작하는 AI</h3><p>브라우저나 GUI를 보고 버튼을 누르고 입력하며 실제 애플리케이션을 사용할 수 있다. API가 없는 도구까지 작업 범위에 포함되지만, 로그인·외부 전송·삭제처럼 결과를 되돌리기 어려운 행동에는 승인 지점이 필요하다.</p><p class="small"><b>수업에 주는 변화</b> “답을 생성했는가”에서 “어떤 행동을 허용했는가”까지 검토 범위가 넓어진다.</p></div>
-<div class="card amber"><span class="tag">MCP</span><h3>AI와 데이터·도구를 연결하는 공통 규격</h3><p>Model Context Protocol은 AI 애플리케이션이 외부 데이터와 도구를 연결하는 방식을 표준화하려는 공개 프로토콜이다. 모델 자체의 지식만 쓰는 것이 아니라 필요한 자료와 기능을 그때그때 연결한다.</p><p class="small"><b>수업에 주는 변화</b> 어떤 자료에 접근시킬지, 어떤 도구 권한을 줄지가 프롬프트만큼 중요하다.</p></div>
-<div class="card purple"><span class="tag">Jev · decision model</span><h3>문장 대신 선택과 확률을 돌려주는 모델</h3><p>TypeSafe AI가 2026년 9월 공개한 Jev는 자유로운 문장 생성보다 <b>분류·선택·점수화 같은 구조화된 결정</b>에 초점을 둔다. 입력 상태를 보고 typed decision과 확률을 반환해 소프트웨어가 다음 행동을 정하도록 설계됐다.</p><p class="small">회사가 공개한 속도·효율 수치는 제품 측 주장이다. 여기서는 성능 순위보다 <b>생성 모델과 결정 모델을 나누는 설계</b>에 주목한다.</p></div>
-<div class="card cyan"><span class="tag">Evals · traces</span><h3>답 하나보다 전체 작업 흐름을 평가</h3><p>에이전트 평가에서는 모델의 문장만 보는 것으로 충분하지 않다. 어떤 도구를 골랐는지, 중간 단계에서 무엇을 넘겼는지, 잘못된 행동을 멈췄는지까지 trace 단위로 확인하는 방식이 중요해지고 있다.</p><p class="small"><b>수업에 주는 변화</b> 학생의 프롬프트 한 줄이 아니라 선택·도구 사용·검증·수정의 연쇄를 평가한다.</p></div>
-<div class="card red"><span class="tag">Guardrails · approval</span><h3>자동화가 커질수록 멈추는 조건이 중요</h3><p>입력·출력·도구 호출을 자동 검사하고, 민감한 행동 앞에서는 사람이 승인하도록 하는 구조가 에이전트 설계의 핵심 요소가 되고 있다.</p><p class="small"><b>학교에서의 기준</b> 학생 개인정보, 평가, 안전, 외부 전송, 삭제·수정은 자동화 범위를 좁게 잡는다.</p></div>
+<div class="card blue"><span class="tag">Long-horizon agents</span><h3>몇 분에서 며칠까지 이어지는 작업</h3><p>에이전트는 한 번의 답변을 넘어 파일을 읽고, 코드를 실행하고, 중간 결과를 저장하며 다음 작업으로 이어간다. 최근 에이전트 플랫폼은 컨텍스트 관리와 하위 에이전트 조율까지 실행 환경의 일부로 다룬다.</p><p class="small"><b>남길 기록</b> 중간 판단·수정·작업 기록</p></div>
+<div class="card green"><span class="tag">Computer use</span><h3>화면을 보고 직접 조작하는 AI</h3><p>브라우저나 GUI를 보고 버튼을 누르고 입력하며 실제 애플리케이션을 사용할 수 있다. API가 없는 도구까지 작업 범위에 포함되지만, 로그인·외부 전송·삭제처럼 결과를 되돌리기 어려운 행동에는 승인 지점이 필요하다.</p><p class="small"><b>확인할 것</b> AI에게 허용한 행동과 실제 실행 결과</p></div>
+<div class="card amber"><span class="tag">MCP</span><h3>AI와 데이터·도구를 연결하는 공통 규격</h3><p>Model Context Protocol은 AI 애플리케이션이 외부 데이터와 도구를 연결하는 방식을 표준화하려는 공개 프로토콜이다. 모델 자체의 지식만 쓰는 것이 아니라 필요한 자료와 기능을 그때그때 연결한다.</p><p class="small"><b>설정할 것</b> 접근 가능한 자료와 도구 권한</p></div>
+<div class="card purple"><span class="tag">Jev · decision model</span><h3>문장 대신 선택과 확률을 돌려주는 모델</h3><p>TypeSafe AI가 2026년 9월 공개한 Jev는 자유로운 문장 생성보다 <b>분류·선택·점수화 같은 구조화된 결정</b>에 초점을 둔다. 입력 상태를 보고 typed decision과 확률을 반환해 소프트웨어가 다음 행동을 정하도록 설계됐다.</p><p class="small">속도·효율 수치는 TypeSafe AI가 공개한 값이다. <b>생성 모델과 결정 모델의 역할을 구분</b>해서 본다.</p></div>
+<div class="card cyan"><span class="tag">Evals · traces</span><h3>답 하나보다 전체 작업 흐름을 평가</h3><p>에이전트 평가에서는 모델의 문장만 보는 것으로 충분하지 않다. 어떤 도구를 골랐는지, 중간 단계에서 무엇을 넘겼는지, 잘못된 행동을 멈췄는지까지 trace 단위로 확인하는 방식이 중요해지고 있다.</p><p class="small"><b>평가할 것</b> 선택·도구 사용·검증·수정의 과정</p></div>
+<div class="card red"><span class="tag">Guardrails · approval</span><h3>자동화가 커질수록 멈추는 조건이 중요</h3><p>입력·출력·도구 호출을 검사하고, 개인정보 전송·삭제·평가 확정처럼 되돌리기 어려운 행동 앞에서는 사람이 승인한다.</p><p class="small"><b>학교에서의 기준</b> 학생 개인정보, 평가, 안전, 외부 전송, 삭제·수정은 자동화 범위를 좁게 잡는다.</p></div>
 </div>
 
 <div class="hr"></div>
@@ -247,7 +278,7 @@ details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:
 <tr><td><b>민감한 최종 판단</b></td><td>사람</td><td>책임·맥락·권리·안전이 걸려 있음</td><td>학생 평가 확정, 생활기록, 안전 판단</td></tr>
 </tbody>
 </table></div>
-<div class="callout"><strong>핵심은 모델 선택이 아니라 역할 분리다.</strong><br/>언어를 잘 만드는 모델, 빠르게 분류하는 모델, 정확히 계산하는 코드, 실제로 행동하는 도구, 책임을 지는 사람을 한 구조 안에 배치한다.</div>
+<div class="callout"><strong>역할을 나눈다.</strong><br/>문장 생성은 LLM, 계산은 코드, 분류는 결정 모델, 실행은 도구, 최종 책임은 사람이 맡는다.</div>
 
 <div class="hr"></div>
 <h3>에이전트는 ‘모델’이 아니라 반복 구조다</h3>
@@ -312,8 +343,8 @@ details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:
 </section>
 <section id="news26">
 <div class="kicker">LIVE CASES · UPDATED 2026-09-30</div>
-<h2>올해의 AI 뉴스는 기능 목록보다 ‘무엇이 실제로 바뀌었는가’로 읽는다</h2>
-<p class="lead">2026년에는 모델 자체의 성능 경쟁과 함께 <b>에이전트, 컴퓨터 사용, 이미지·영상 생성, 구조화된 의사결정, 금융·업무 특화, 안전과 권한</b>이 동시에 전면으로 나왔다. 아래 자료는 모두 클릭해서 원문이나 관련 사례를 확인할 수 있다.</p>
+<h2>2026년 AI 뉴스</h2>
+<p class="lead"><b>에이전트, 컴퓨터 사용, 이미지·영상 생성, 구조화된 의사결정, 금융 특화, 권한 통제</b>가 2026년 AI 제품의 주요 흐름이다.</p>
 <div class="newsline"><div class="newsdate">9/29</div><div><b>OpenAI ‘Dots’ — 항상 켜져 있는 개인·업무 에이전트</b><br/><span class="small">DevDay 2026 직후 보도. 사용자의 앱·선호·맥락을 바탕으로 여러 단계의 일을 선제적으로 수행하는 방향이 전면에 등장했다. 동시에 모델 안전성·권한 통제 문제가 같은 기사 안에서 다뤄진다.</span></div></div>
 <div class="newsline"><div class="newsdate">9/15</div><div><b>Jev — “문장을 만드는 AI”와 “결정을 내리는 AI”를 분리</b><br/><span class="small">TypeSafe AI는 자유 텍스트 대신 choice·score·probability 같은 typed decision을 반환하는 System One 모델을 공개했다. 이 사례는 모든 작업을 하나의 LLM에 맡길 필요가 있는가를 묻기에 좋다.</span></div></div>
 <div class="newsline"><div class="newsdate">9/10</div><div><b>Agents API — 에이전트의 핵심이 모델에서 실행 환경으로 이동</b><br/><span class="small">컨텍스트 관리, 도구 사용, 하위 에이전트 조율, 코드 실행, 파일 처리, 중간 결과 저장, 장기 실행이 하나의 하네스로 묶였다.</span></div></div>
@@ -321,12 +352,12 @@ details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:
 <div class="newsline"><div class="newsdate">7/7→7/10</div><div><b>Meta Muse Image와 Instagram — 기능보다 사회적 경계가 더 빨리 드러난 사례</b><br/><span class="small">Muse Image는 Instagram Stories 등으로 확장됐지만, 공개 Instagram 계정을 @멘션해 이미지를 참조하는 기능은 이용자 반발 뒤 빠르게 철회됐다. 기술적으로 가능한 것과 사회적으로 허용되는 것은 다르다.</span></div></div>
 
 <div class="linkgrid">
-<a class="linkcard" href="https://apnews.com/article/77b6b8888145869206996d7509d24256" target="_blank" rel="noopener"><div class="source">AP · 2026-09-29</div><h3>OpenAI의 ‘always-on’ Dots 에이전트</h3><p>DevDay 직후 가장 최신 흐름. 능동형 에이전트와 안전성 논쟁을 한 번에 볼 수 있다.</p><span class="open">기사 열기 ↗</span></a>
+<a class="linkcard" href="https://apnews.com/article/77b6b8888145869206996d7509d24256" target="_blank" rel="noopener"><div class="source">AP · 2026-09-29</div><h3>OpenAI의 ‘always-on’ Dots 에이전트</h3><p>사용자의 앱·선호·맥락을 연결해 여러 단계의 일을 수행하는 능동형 에이전트 사례.</p><span class="open">기사 열기 ↗</span></a>
 <a class="linkcard" href="https://typesafe.ai/blog/introducing-system-one-models-and-jev" target="_blank" rel="noopener"><div class="source">TypeSafe AI · 2026-09-15</div><h3>System One Models & Jev 공식 발표</h3><p>‘Decisions, not strings’. 생성형 모델과 결정 모델의 역할을 나누는 발상.</p><span class="open">공식 발표 열기 ↗</span></a>
 <a class="linkcard" href="https://www.businessinsider.com/jev-model-san-francisco-developers-hackathon-2026-9" target="_blank" rel="noopener"><div class="source">Business Insider · 2026-09-30</div><h3>샌프란시스코 Jev 해커톤 현장</h3><p>개발자들이 브라우저 에이전트·분류·자동화에 Jev를 실제로 붙이는 장면을 읽을 수 있다.</p><span class="open">기사 열기 ↗</span></a>
 <a class="linkcard" href="https://openai.com/index/introducing-the-agents-api/" target="_blank" rel="noopener"><div class="source">OpenAI · 2026-09-10</div><h3>Agents API</h3><p>장기 실행, 컨텍스트 관리, subagent, 파일·코드 환경이 왜 필요한지 공식 설명.</p><span class="open">공식 문서 열기 ↗</span></a>
 <a class="linkcard" href="https://openai.com/index/introducing-chatgpt-images-2-5/" target="_blank" rel="noopener"><div class="source">OpenAI · 2026-09-08</div><h3>ChatGPT Images 2.5</h3><p>이미지 생성이 결과물 생성에서 반복 편집·스케치·제작 워크플로로 이동한 사례.</p><span class="open">공식 사례 열기 ↗</span></a>
-<a class="linkcard" href="https://about.fb.com/news/2026/07/introducing-muse-image-meta-ai/" target="_blank" rel="noopener"><div class="source">Meta · 2026-07-07</div><h3>Muse Image + Instagram Stories</h3><p>공식 페이지 안에 Instagram Story Effects 영상 사례가 포함돼 있어 연수에서 바로 보여주기 좋다.</p><span class="open">영상·사례 보기 ↗</span></a>
+<a class="linkcard" href="https://about.fb.com/news/2026/07/introducing-muse-image-meta-ai/" target="_blank" rel="noopener"><div class="source">Meta · 2026-07-07</div><h3>Muse Image + Instagram Stories</h3><p>공식 페이지에서 Instagram Story Effects 영상 사례를 확인할 수 있다.</p><span class="open">영상·사례 보기 ↗</span></a>
 <a class="linkcard" href="https://techcrunch.com/2026/07/10/meta-removes-controversial-ai-feature-on-instagram-after-backlash/" target="_blank" rel="noopener"><div class="source">TechCrunch · 2026-07-10</div><h3>Instagram AI 기능이 사흘 만에 철회된 이유</h3><p>공개 계정의 사진을 AI 참조 대상으로 쓰는 기능이 반발을 일으킨 사례. 개인정보·동의 수업에 적합하다.</p><span class="open">기사 열기 ↗</span></a>
 <a class="linkcard" href="https://openai.com/index/introducing-chatgpt-financial-services/" target="_blank" rel="noopener"><div class="source">OpenAI · 2026-09-10</div><h3>AI가 금융 리서치·모델링 안으로 들어가는 방식</h3><p>금융 데이터, 세밀한 인용, 모델링을 한 제품 안에 넣은 사례. AI와 주식시장 파트와 연결된다.</p><span class="open">공식 발표 열기 ↗</span></a>
 </div>
@@ -358,8 +389,8 @@ details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:
 
 <section id="stocks26">
 <div class="kicker">AI × MARKET · 2026</div>
-<h2>AI를 주식시장으로 읽으면 기술의 ‘병목’과 ‘돈의 흐름’이 보인다</h2>
-<p class="lead">매수 종목을 고르는 시간이 아니다. <b>모델 → 반도체 → 메모리 → 데이터센터 → 전력 → 서비스 수익화</b>로 이어지는 산업 구조를 읽는다. 기술 뉴스가 기업의 매출·CAPEX·현금흐름·밸류에이션으로 어떻게 연결되는지 살펴본다.</p>
+<h2>AI 산업의 돈은 어디로 흐르는가</h2>
+<p class="lead"><b>모델 → 반도체 → 메모리 → 데이터센터 → 전력 → 서비스 수익화</b>. 기술 변화는 매출·CAPEX·현금흐름·밸류에이션으로 이어진다.</p>
 <div class="flow" style="margin-top:22px">
 <div class="step">AI 서비스<br/><span class="small">사용량·수익화</span></div><div class="arrow">→</div>
 <div class="step">가속기<br/><span class="small">GPU·ASIC</span></div><div class="arrow">→</div>
@@ -376,7 +407,7 @@ details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:
 <div class="card cyan"><span class="tag">MONETIZATION</span><h3>CAPEX가 커질수록 질문은 “AI가 좋은가”에서 “돈을 버는가”로</h3><p>인프라 투자가 빠르게 커질 때 자유현금흐름과 수익화 속도가 함께 중요해진다. 기술 전망과 투자 판단을 분리해서 보는 연습이 필요하다.</p></div>
 </div>
 <div class="linkgrid">
-<a class="linkcard" href="https://www.ft.com/content/dcf3873e-7b32-4a24-a90d-3bccf1d2c996" target="_blank" rel="noopener"><div class="source">Financial Times · 2026</div><h3>Big Tech AI spending spree tops $1tn</h3><p>AI가 ‘소프트웨어 혁신’이면서 동시에 거대한 설비투자 사이클이라는 점을 보여준다.</p><span class="open">기사 열기 ↗</span></a>
+<a class="linkcard" href="https://www.ft.com/content/dcf3873e-7b32-4a24-a90d-3bccf1d2c996" target="_blank" rel="noopener"><div class="source">Financial Times · 2026</div><h3>Big Tech AI spending spree tops $1tn</h3><p>AI 경쟁은 소프트웨어 개발과 동시에 거대한 설비투자를 요구한다.</p><span class="open">기사 열기 ↗</span></a>
 <a class="linkcard" href="https://www.iea.org/reports/key-questions-on-energy-and-ai/executive-summary" target="_blank" rel="noopener"><div class="source">IEA · 2026</div><h3>Key Questions on Energy and AI</h3><p>전력수요·데이터센터·AI factory를 산업 구조와 연결하는 데 좋은 공공 자료.</p><span class="open">보고서 열기 ↗</span></a>
 <a class="linkcard" href="https://www.bloomberg.com/news/articles/2026-07-08/nvidia-s-1-trillion-slide-sends-valuation-to-pre-ai-boom-levels" target="_blank" rel="noopener"><div class="source">Bloomberg · 2026-07-08</div><h3>Nvidia의 1조 달러 시총 감소와 AI 트레이드 순환</h3><p>좋은 기업·좋은 기술과 주가의 가격·기대 수준을 구분하는 사례.</p><span class="open">기사 열기 ↗</span></a>
 <a class="linkcard" href="https://news.skhynix.com/en/q2-2026-business-results/" target="_blank" rel="noopener"><div class="source">SK hynix · 2026-07-29</div><h3>HBM4와 AI 메모리 수요</h3><p>기업 발표 자료이므로 회사 관점을 감안해 읽되, 메모리 병목과 장기계약 구조를 확인하기 좋다.</p><span class="open">회사 발표 열기 ↗</span></a>
@@ -441,7 +472,7 @@ details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:
 <div class="grid3">
 <div class="card blue"><h3>O · Orchestration</h3><p><b>목표를 세우고 AI와 사람의 일을 배열한다.</b></p><p>도구 선택, 작업 분해, 순서 결정, 추가 질문, 중간 결과 활용.</p><p class="small">“한 번에 모든 과정을 묻기보다 실제 화면을 보면서 막히는 부분을 하나씩 질문했다.”</p></div>
 <div class="card green"><h3>V · Verification</h3><p><b>AI의 말을 다시 AI에게 묻는 것으로 끝내지 않는다.</b></p><p>직접 실행, 다른 자료와 대조, 예외 입력, 여러 기기 테스트, 수정 반영 확인.</p><p class="small">웹앱 주소에 접속해 버튼과 입력 기능을 사용하고 휴대전화에서도 확인한 사례.</p></div>
-<div class="card amber"><h3>T · Transfer</h3><p><b>이번 문제에서 얻은 전략을 다음 문제에 옮긴다.</b></p><p>원리 추출, 적용 조건 파악, 다른 과제·교과·프로젝트로 재사용.</p><p class="small">로컬 HTML과 웹 호스팅의 차이를 이해하고 다른 프로젝트의 결과 공유에 같은 방식을 적용.</p></div>
+<div class="card amber"><h3>T · Transfer</h3><p><b>이 문제에서 얻은 전략을 다음 문제에 옮긴다.</b></p><p>원리 추출, 적용 조건 파악, 다른 과제·교과·프로젝트로 재사용.</p><p class="small">로컬 HTML과 웹 호스팅의 차이를 이해하고 다른 프로젝트의 결과 공유에 같은 방식을 적용.</p></div>
 </div>
 <div class="hr"></div>
 <h3>웹앱 제작 사례</h3>
@@ -513,7 +544,7 @@ details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:
 <h2>AI가 쉽게 완성하는 과제는 학생의 판단이 보이도록 바꾼다</h2>
 <div class="grid2">
 <div class="card blue"><h3>2022 개정 교육과정</h3><p>2026년 3월부터 초등 5·6학년, 중학교 2학년, 고등학교 2학년까지 적용된다.</p><p>디지털 전환, 학생의 주도성, 깊이 있는 학습, 과정과 수행의 증거를 수업 설계와 연결한다.</p><p class="small"><a href="https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=141&amp;boardSeq=93458&amp;lev=0" target="_blank">교육부 고시 제2022-33호</a></p></div>
-<div class="card purple"><h3>2028 대입 체제</h3><p>국어·수학·사회·과학의 선택과목 없는 통합형 수능, 고교 내신 5등급 체제가 확정되어 있다.</p><p>AI 시대 수업에서는 결과물의 정돈 정도보다 학생의 근거·설명·전환 가능성을 확인하는 과제 설계가 더 중요해진다.</p><p class="small"><a href="https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=294&amp;boardSeq=97551" target="_blank">교육부 2028 대학입시제도 개편 확정안</a></p></div>
+<div class="card purple"><h3>2028 대입 체제</h3><p>국어·수학·사회·과학의 선택과목 없는 통합형 수능, 고교 내신 5등급 체제가 확정되어 있다.</p><p>평가 자료에는 <b>근거, 설명, 수정 기록, 조건을 바꿨을 때의 적용</b>을 함께 남긴다.</p><p class="small"><a href="https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=294&amp;boardSeq=97551" target="_blank">교육부 2028 대학입시제도 개편 확정안</a></p></div>
 </div>
 <h3 style="margin-top:28px">과제를 바꾸는 네 방향</h3>
 <div class="tablewrap"><table>
@@ -594,7 +625,7 @@ details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:
 <div class="lens"><div class="title">표현</div><p><b>그 의미를 어떤 시각 언어로 구현하는가.</b></p><ul><li>크기·위치·구도</li><li>빛·색·명암</li><li>선·질감·반복</li><li>원근·시점·잘림</li><li>재료·기법·복제 방식</li></ul></div>
 </div>
 <div class="callout"><strong>감상 질문:</strong> “이 그림은 무엇을 그렸는가?” 다음에 “누구의 관점에서 무엇을 중요하게 보이도록 만들었는가?”와 “그 판단을 어떤 표현 방식이 가능하게 했는가?”를 묻는다.</div>
-<h3>미술사의 변화도 표상과 표현의 문제로 다시 읽을 수 있다</h3>
+<h3>미술사의 변화: 표상과 표현</h3>
 <div class="timeline" id="artTimeline"></div>
 <div class="card" id="artTimelineText"></div>
 <div class="grid2" style="margin-top:18px">
@@ -641,7 +672,7 @@ details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:
 </tbody>
 </table></div>
 <div class="practice">
-<div class="label">앱 제작 요청</div><h3>상호작용이 개념을 설명하게 만든다</h3>
+<div class="label">앱 제작 요청</div><h3>바꿀 값과 관찰할 결과</h3>
 <div class="prompt" id="pConceptApp">아래 개념을 이해하기 위한 단일 HTML 학습 앱을 만들어줘.
 HTML, CSS, JavaScript를 한 파일에 넣어줘.
 
@@ -659,7 +690,7 @@ HTML, CSS, JavaScript를 한 파일에 넣어줘.
 </section>
 <section id="subjects">
 <div class="kicker">SUBJECT DESIGN</div>
-<h2>AI를 넣는 위치보다 학생의 사고를 먼저 정한다</h2>
+<h2>학생이 할 사고부터 정한다</h2>
 <div class="grid4">
 <div class="card blue"><h3>생성</h3><p>여러 대안을 만들고 선택의 근거를 설명한다.</p></div>
 <div class="card green"><h3>비교</h3><p>서로 다른 답·관점·풀이의 기준을 세우고 비교한다.</p></div>
@@ -677,7 +708,7 @@ HTML, CSS, JavaScript를 한 파일에 넣어줘.
 <tr><td>미술</td><td>시대 조건에 따른 이미지 생성</td><td>표상과 표현이 시대·의도와 연결되는지 판단</td><td>프롬프트 조건·비교 감상</td></tr>
 </tbody>
 </table></div>
-<div class="practice"><div class="label">수업 설계</div><h3>AI를 쓰지 않아도 되는 활동이라면 왜 넣는지 다시 묻는다</h3>
+<div class="practice"><div class="label">수업 설계</div><h3>AI 사용 이유를 한 문장으로 적는다</h3>
 <div class="checklist">
 <label class="check"><input type="checkbox"/>AI 때문에 학생이 비교할 대안이 늘어난다.</label>
 <label class="check"><input type="checkbox"/>AI 결과가 틀릴 수 있어 검증 활동이 생긴다.</label>
@@ -687,7 +718,7 @@ HTML, CSS, JavaScript를 한 파일에 넣어줘.
 </div>
 
 <div class="hr"></div>
-<h3>교과의 사고 방식이 다르면 AI에게 맡기는 일도 달라진다</h3>
+<h3>교과별 AI 역할</h3>
 <div class="casebox">
 <div class="casehead"><span class="badge">국어</span><h4>주장문을 생성시키는 것보다 근거를 평가하게 한다</h4></div>
 <div class="subjectcase"><div class="row"><div class="labelcell">AI</div><div>같은 쟁점에 대한 주장문 3개와 각 근거를 생성</div><div class="labelcell">학생 판단</div><div>사실·가치 판단을 구분하고 근거의 관련성과 충분성을 비교</div></div></div>
@@ -736,7 +767,7 @@ AI가 만들어 줄 수 있는 대안·설명·자료를 활용하되,
 </section>
 <section id="materials">
 <div class="kicker">MATERIALS &amp; FEEDBACK</div>
-<h2>수업자료는 생성보다 수정과 검토가 중심이 된다</h2>
+<h2>AI 초안은 수정하고 검토한다</h2>
 <div class="grid2">
 <div class="card"><h3>활동지</h3><div class="prompt" id="pSheet">앞의 수업을 위한 A4 1쪽 활동지를 만들어줘.
 - 학생이 직접 쓰는 공간을 충분히 둘 것
@@ -772,7 +803,7 @@ AI가 만들어 줄 수 있는 대안·설명·자료를 활용하되,
 </div>
 
 <div class="hr"></div>
-<h3>수업자료 제작은 다섯 단계로 본다</h3>
+<h3>수업자료 제작 5단계</h3>
 <div class="flow">
 <div class="step">학습목표·학생 조건</div><div class="arrow">→</div>
 <div class="step">AI 초안</div><div class="arrow">→</div>
@@ -797,7 +828,7 @@ AI가 만들어 줄 수 있는 대안·설명·자료를 활용하되,
 <div class="card"><h3>문제 해결 근거</h3><p>결론뿐 아니라 문제 이해·방법 선택·실행·수정의 근거가 있는가.</p></div>
 <div class="card"><h3>교육적 적용</h3><p>경험을 수업 설계·평가·교사의 역할로 옮겼는가.</p></div>
 <div class="card"><h3>사회·윤리적 성찰</h3><p>책임·존엄·노동·편향·시민성과 연결해 판단했는가.</p></div>
-<div class="card amber"><h3>중요한 해석</h3><p>다섯 기준은 학생을 등급화하는 표준척도가 아니라 두 자료의 관계를 비교하기 위한 분석 범주다.</p></div>
+<div class="card amber"><h3>해석할 때 주의할 점</h3><p>다섯 기준은 학생을 등급화하는 표준척도가 아니라 두 자료의 관계를 비교하기 위한 분석 범주다.</p></div>
 </div>
 <h3 style="margin-top:28px">같은 기준이 어느 자료에서 더 강하게 보였는가</h3>
 <div class="legend"><span class="r">수업 활동 기록</span><span class="a">서술형 답안</span></div>
@@ -872,8 +903,8 @@ AI가 만들어 줄 수 있는 대안·설명·자료를 활용하되,
 </section>
 <section id="agent">
 <div class="kicker">AI AGENT</div>
-<h2>에이전트는 하나의 답을 만드는 대신 목표를 여러 작업으로 수행한다</h2>
-<p class="lead">에이전트의 핵심은 모델의 이름이 아니라 <b>목표를 유지하면서 도구를 사용하고, 결과를 관찰하고, 다음 행동을 다시 선택하는 반복 구조</b>다. 작업이 길어질수록 상태 저장, 승인, 검증, 중단 조건이 중요해진다.</p>
+<h2>에이전트: 목표를 여러 단계로 실행</h2>
+<p class="lead">에이전트는 <b>목표를 유지하고 → 도구를 사용하고 → 결과를 확인하고 → 다음 행동을 다시 선택</b>한다. 긴 작업에는 상태 저장, 승인, 검증, 중단 조건이 필요하다.</p>
 <div class="grid4" style="margin:20px 0 24px">
 <div class="card blue"><h3>Goal</h3><p>완료 조건이 있는 목표. “좋게 해줘”보다 무엇이 끝나야 하는지 명시한다.</p></div>
 <div class="card green"><h3>Context</h3><p>파일·자료·이전 결과·현재 상태. 필요한 정보만 유지하고 오래된 정보는 갱신한다.</p></div>
@@ -909,7 +940,7 @@ E. 개인정보·저작권·정확성 때문에 주의할 점
 </div>
 
 <div class="hr"></div>
-<h3>학교 업무를 에이전트형 워크플로로 바꿔 본다</h3>
+<h3>학교 업무 워크플로 설계</h3>
 <div class="grid2">
 <div class="card"><span class="tag">공개수업</span><h3>수업 준비 전체</h3><ol><li>성취기준·학습목표 확인</li><li>학생 활동 설계</li><li>활동지 제작</li><li>형성평가 제작</li><li>학부모 안내문</li><li>수업 후 설문</li><li>결과 정리</li></ol><p class="small"><b>사람의 판단</b> 실제 학급 조건, 수업 목표, 공개 범위, 학생 개인정보.</p></div>
 <div class="card"><span class="tag">현장체험학습</span><h3>계획과 안내</h3><ol><li>교육목표 확인</li><li>공개 정보로 장소 후보 조사</li><li>이동·비용·안전 조건 비교</li><li>일정 초안</li><li>안내문·준비물</li><li>체크리스트</li></ol><p class="small"><b>사람의 판단</b> 안전 책임, 실제 예약, 학생별 건강·개인정보, 최종 승인.</p></div>
@@ -917,7 +948,7 @@ E. 개인정보·저작권·정확성 때문에 주의할 점
 <div class="card"><span class="tag">수행평가</span><h3>과제와 채점 기준</h3><ol><li>평가목표 설정</li><li>과제 초안</li><li>AI가 쉽게 대신할 부분 점검</li><li>과정 증거 추가</li><li>루브릭 제작</li><li>예시 답안 검토</li><li>변형 질문 제작</li></ol><p class="small"><b>사람의 판단</b> 평가 타당도, 수준 적합성, 채점 책임.</p></div>
 </div>
 <div class="practice">
-<div class="label">에이전트 설계</div><h3>중간 결과가 다음 작업의 입력이 되게 한다</h3>
+<div class="label">에이전트 설계</div><h3>중간 결과를 다음 단계에 연결</h3>
 <div class="prompt" id="pAgentChain">다음 업무를 하나의 답변으로 끝내지 말고 작업 흐름으로 설계해줘.
 
 업무: [실제 학교 업무]
@@ -937,7 +968,7 @@ E. 개인정보·저작권·정확성 때문에 주의할 점
 </section>
 <section id="studio">
 <div class="kicker">DESIGN STUDIO</div>
-<h2>내 수업에서 학생의 판단이 남는 지점을 설계한다</h2>
+<h2>학생이 직접 판단할 지점</h2>
 <div class="grid2">
 <div class="card"><h3>학습</h3>
 <div class="inputrow"><label>학년·교과</label><input data-store="studio-grade" placeholder="예: 5학년 과학"/></div>
@@ -978,7 +1009,7 @@ E. 개인정보·저작권·정확성 때문에 주의할 점
 <div class="card flat"><h4>6. 남길 증거</h4><textarea class="notearea" data-store="studio-evidence-deep" placeholder="최종본 외에 선택 이유·수정 기록·OVT·구술 확인 등"></textarea></div>
 </div>
 <div class="practice">
-<div class="label">완성</div><h3>수업안을 생성한 뒤 바로 공격한다</h3>
+<div class="label">완성</div><h3>수업안 점검</h3>
 <div class="prompt" id="pStudioFinal">다음 수업 설계를 완성한 뒤 스스로 비판적으로 검토해줘.
 
 [학습목표]
@@ -1001,7 +1032,7 @@ E. 개인정보·저작권·정확성 때문에 주의할 점
 </section>
 <section id="synthesis">
 <div class="kicker">SYNTHESIS</div>
-<h2>하나의 수업을 목표·AI·OVT·평가 증거까지 연결한다</h2>
+<h2>목표·AI·OVT·평가 증거 연결</h2>
 <p class="lead">AI 도구의 기능을 먼저 고르지 않고, 학생에게 남겨야 할 사고와 증거를 먼저 정한 뒤 필요한 지점에 AI를 배치한다.</p>
 <div class="tablewrap"><table>
 <thead><tr><th>설계 질문</th><th>예시 · 과학에서 현상 설명 비교</th></tr></thead>
@@ -1016,7 +1047,7 @@ E. 개인정보·저작권·정확성 때문에 주의할 점
 </tbody>
 </table></div>
 <div class="practice">
-<div class="label">통합 프롬프트</div><h3>수업을 한 번에 생성하지 말고 설계 논리를 먼저 확인한다</h3>
+<div class="label">통합 프롬프트</div><h3>수업 설계 확인</h3>
 <div class="prompt" id="pSynthesis">나는 [학년] [교과]에서 [내용]을 가르친다.
 
 먼저 수업안을 쓰지 말고 다음 여섯 항목을 제안해줘.
@@ -1145,8 +1176,8 @@ E. 개인정보·저작권·정확성 때문에 주의할 점
 
 <section class="hero" id="algorithm-finale">
 <div class="kicker">FINAL LAB · CLASSIC MACHINE LEARNING</div>
-<h2>마지막은 직접 움직여보는 네 가지 알고리즘</h2>
-<p class="lead">최신 AI 뉴스와 에이전트까지 살펴본 뒤, 마지막에는 다시 기본 원리로 돌아온다. <b>마르코프 체인 → 유전 알고리즘 → k-NN → Naive Bayes</b>를 조작하면서 “AI가 무엇을 근거로 다음 상태·후보·이웃·확률을 결정하는가”를 비교한다.</p>
+<h2>마르코프 체인 · 유전 알고리즘 · k-NN · Naive Bayes</h2>
+<p class="lead"><b>마르코프 체인</b>은 다음 상태의 확률, <b>유전 알고리즘</b>은 선택과 변형, <b>k-NN</b>은 이웃과 거리, <b>Naive Bayes</b>는 증거에 따른 확률 갱신으로 판단한다.</p>
 <div class="quote">복잡한 최신 AI도 결국 상태를 표현하고, 후보를 만들고, 평가하고, 선택하고, 검증하는 계산의 연쇄로 볼 수 있다.</div>
 </section>
 <section id="algorithms">
@@ -1217,7 +1248,7 @@ const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll
 // progress + active nav
 const progress=$('#progress');
 function onScroll(){const h=document.documentElement.scrollHeight-innerHeight; progress.style.width=(h?scrollY/h*100:0)+'%';
-  let cur=''; $$('main section').forEach(s=>{if(scrollY+130>=s.offsetTop) cur=s.id}); $$('aside a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));}
+ let cur=''; $$('main section').forEach(s=>{if(scrollY+130>=s.offsetTop) cur=s.id}); $$('aside a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));}
 addEventListener('scroll',onScroll,{passive:true}); onScroll();
 
 // focus mode
