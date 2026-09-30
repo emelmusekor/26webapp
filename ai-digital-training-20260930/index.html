@@ -120,6 +120,20 @@ details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:
 .compactlist{margin:8px 0 0 18px;padding:0}.compactlist li{margin:5px 0}.twocol-note{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}.evidence-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.evidence-grid .card{padding:15px}.evidence-grid h4{font-size:14px}.section-intro{display:flex;justify-content:space-between;gap:18px;align-items:flex-end;flex-wrap:wrap;margin-bottom:18px}.section-intro .lead{margin:0}.sourcebar{background:#f8fafc;border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:12px;color:#667085;margin-top:18px}.subjectcase{border-top:1px solid #e7ebf2;padding:17px 0}.subjectcase:first-child{border-top:0}.subjectcase .row{display:grid;grid-template-columns:120px 1fr 1fr 1fr;gap:10px;align-items:start}.subjectcase .row>div{padding:9px 10px;background:#fff;border:1px solid var(--line);border-radius:11px}.subjectcase .row .labelcell{background:#f8fafc;font-weight:900}
 @media(max-width:950px){.timeline{grid-template-columns:1fr 1fr}.evidence-grid{grid-template-columns:1fr 1fr}.subjectcase .row{grid-template-columns:1fr}.twocol-note{grid-template-columns:1fr}}
 @media(max-width:620px){.timeline,.evidence-grid{grid-template-columns:1fr}}
+
+/* 2026 live news / market link cards */
+.linkgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:18px 0 8px}
+.linkcard{display:block;text-decoration:none;color:inherit;background:#fff;border:1px solid var(--line);border-radius:18px;padding:19px 20px;transition:.16s ease;position:relative;overflow:hidden}
+.linkcard:hover{transform:translateY(-2px);border-color:#aeb9cc;box-shadow:0 12px 28px rgba(18,33,63,.09)}
+.linkcard .source{font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--blue);margin-bottom:7px}
+.linkcard h3{margin:0 0 8px;font-size:18px;line-height:1.35}
+.linkcard p{margin:0;color:var(--muted);font-size:14px;line-height:1.6}
+.linkcard .open{display:inline-block;margin-top:12px;font-size:13px;font-weight:800;color:var(--blue)}
+.newsline{display:flex;gap:10px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--line)}
+.newsline:last-child{border-bottom:0}.newsdate{flex:0 0 70px;font-weight:900;color:var(--navy)}
+.socialstrip{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.socialstrip a{display:inline-block;text-decoration:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 13px;color:var(--ink);font-size:13px;font-weight:800}.socialstrip a:hover{border-color:var(--blue);color:var(--blue)}
+@media(max-width:900px){.linkgrid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -137,6 +151,8 @@ details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:
 <div class="navgroup">AI와 작업</div>
 <a href="#start">생성형 AI의 변화</a><a href="#shift">AI 활용의 변화</a>
 <a href="#trends">2026 AI 동향</a>
+<a href="#news26">2026 지금 읽을 뉴스</a>
+<a href="#stocks26">AI와 주식시장</a>
 <a href="#task">작업 설계</a>
 <a href="#ovt">OVT</a>
 <a href="#verify">검증</a>
@@ -145,7 +161,6 @@ details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:
 <a href="#art-context">시대가 프롬프트가 된다</a>
 <a href="#art-representation">표상과 표현</a>
 <a href="#concept-app">개념을 앱으로</a>
-<a href="#algorithms">알고리즘 체험</a>
 <a href="#subjects">교과별 적용</a>
 <a href="#materials">수업자료 제작</a>
 <div class="navgroup">평가와 에이전트</div>
@@ -153,6 +168,8 @@ details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:
 <a href="#agent">AI 에이전트</a>
 <a href="#studio">수업 설계</a><a href="#synthesis">통합 수업 설계</a>
 <a href="#library">프롬프트 라이브러리</a>
+<div class="navgroup">마지막 체험</div>
+<a href="#algorithms">마르코프·GA·k-NN·Bayes</a>
 </aside>
 <main>
 <section class="hero" id="start">
@@ -292,6 +309,98 @@ details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:
 </div>
 
 <div class="sourcebar"><b>2026년 9월 기준 참고</b> · OpenAI Agents API 및 Agents SDK 문서 · OpenAI computer use, agent evals, guardrails 문서 · Anthropic Model Context Protocol 문서 · TypeSafe AI의 Jev/System One 공개 자료. Jev의 성능·효율 수치는 제조사 발표와 외부 보도를 구분해 해석한다.</div>
+</section>
+<section id="news26">
+<div class="kicker">LIVE CASES · UPDATED 2026-09-30</div>
+<h2>올해의 AI 뉴스는 기능 목록보다 ‘무엇이 실제로 바뀌었는가’로 읽는다</h2>
+<p class="lead">2026년에는 모델 자체의 성능 경쟁과 함께 <b>에이전트, 컴퓨터 사용, 이미지·영상 생성, 구조화된 의사결정, 금융·업무 특화, 안전과 권한</b>이 동시에 전면으로 나왔다. 아래 자료는 모두 클릭해서 원문이나 관련 사례를 확인할 수 있다.</p>
+<div class="newsline"><div class="newsdate">9/29</div><div><b>OpenAI ‘Dots’ — 항상 켜져 있는 개인·업무 에이전트</b><br/><span class="small">DevDay 2026 직후 보도. 사용자의 앱·선호·맥락을 바탕으로 여러 단계의 일을 선제적으로 수행하는 방향이 전면에 등장했다. 동시에 모델 안전성·권한 통제 문제가 같은 기사 안에서 다뤄진다.</span></div></div>
+<div class="newsline"><div class="newsdate">9/15</div><div><b>Jev — “문장을 만드는 AI”와 “결정을 내리는 AI”를 분리</b><br/><span class="small">TypeSafe AI는 자유 텍스트 대신 choice·score·probability 같은 typed decision을 반환하는 System One 모델을 공개했다. 이 사례는 모든 작업을 하나의 LLM에 맡길 필요가 있는가를 묻기에 좋다.</span></div></div>
+<div class="newsline"><div class="newsdate">9/10</div><div><b>Agents API — 에이전트의 핵심이 모델에서 실행 환경으로 이동</b><br/><span class="small">컨텍스트 관리, 도구 사용, 하위 에이전트 조율, 코드 실행, 파일 처리, 중간 결과 저장, 장기 실행이 하나의 하네스로 묶였다.</span></div></div>
+<div class="newsline"><div class="newsdate">9/8</div><div><b>이미지 생성은 ‘한 장 만들기’에서 반복 편집·스케치·제작 도구로</b><br/><span class="small">ChatGPT Images 2.5는 빠른 생성뿐 아니라 정밀 편집, 스케치 기반 생성, 템플릿 등 제작 과정 전체를 강조한다.</span></div></div>
+<div class="newsline"><div class="newsdate">7/7→7/10</div><div><b>Meta Muse Image와 Instagram — 기능보다 사회적 경계가 더 빨리 드러난 사례</b><br/><span class="small">Muse Image는 Instagram Stories 등으로 확장됐지만, 공개 Instagram 계정을 @멘션해 이미지를 참조하는 기능은 이용자 반발 뒤 빠르게 철회됐다. 기술적으로 가능한 것과 사회적으로 허용되는 것은 다르다.</span></div></div>
+
+<div class="linkgrid">
+<a class="linkcard" href="https://apnews.com/article/77b6b8888145869206996d7509d24256" target="_blank" rel="noopener"><div class="source">AP · 2026-09-29</div><h3>OpenAI의 ‘always-on’ Dots 에이전트</h3><p>DevDay 직후 가장 최신 흐름. 능동형 에이전트와 안전성 논쟁을 한 번에 볼 수 있다.</p><span class="open">기사 열기 ↗</span></a>
+<a class="linkcard" href="https://typesafe.ai/blog/introducing-system-one-models-and-jev" target="_blank" rel="noopener"><div class="source">TypeSafe AI · 2026-09-15</div><h3>System One Models & Jev 공식 발표</h3><p>‘Decisions, not strings’. 생성형 모델과 결정 모델의 역할을 나누는 발상.</p><span class="open">공식 발표 열기 ↗</span></a>
+<a class="linkcard" href="https://www.businessinsider.com/jev-model-san-francisco-developers-hackathon-2026-9" target="_blank" rel="noopener"><div class="source">Business Insider · 2026-09-30</div><h3>샌프란시스코 Jev 해커톤 현장</h3><p>개발자들이 브라우저 에이전트·분류·자동화에 Jev를 실제로 붙이는 장면을 읽을 수 있다.</p><span class="open">기사 열기 ↗</span></a>
+<a class="linkcard" href="https://openai.com/index/introducing-the-agents-api/" target="_blank" rel="noopener"><div class="source">OpenAI · 2026-09-10</div><h3>Agents API</h3><p>장기 실행, 컨텍스트 관리, subagent, 파일·코드 환경이 왜 필요한지 공식 설명.</p><span class="open">공식 문서 열기 ↗</span></a>
+<a class="linkcard" href="https://openai.com/index/introducing-chatgpt-images-2-5/" target="_blank" rel="noopener"><div class="source">OpenAI · 2026-09-08</div><h3>ChatGPT Images 2.5</h3><p>이미지 생성이 결과물 생성에서 반복 편집·스케치·제작 워크플로로 이동한 사례.</p><span class="open">공식 사례 열기 ↗</span></a>
+<a class="linkcard" href="https://about.fb.com/news/2026/07/introducing-muse-image-meta-ai/" target="_blank" rel="noopener"><div class="source">Meta · 2026-07-07</div><h3>Muse Image + Instagram Stories</h3><p>공식 페이지 안에 Instagram Story Effects 영상 사례가 포함돼 있어 연수에서 바로 보여주기 좋다.</p><span class="open">영상·사례 보기 ↗</span></a>
+<a class="linkcard" href="https://techcrunch.com/2026/07/10/meta-removes-controversial-ai-feature-on-instagram-after-backlash/" target="_blank" rel="noopener"><div class="source">TechCrunch · 2026-07-10</div><h3>Instagram AI 기능이 사흘 만에 철회된 이유</h3><p>공개 계정의 사진을 AI 참조 대상으로 쓰는 기능이 반발을 일으킨 사례. 개인정보·동의 수업에 적합하다.</p><span class="open">기사 열기 ↗</span></a>
+<a class="linkcard" href="https://openai.com/index/introducing-chatgpt-financial-services/" target="_blank" rel="noopener"><div class="source">OpenAI · 2026-09-10</div><h3>AI가 금융 리서치·모델링 안으로 들어가는 방식</h3><p>금융 데이터, 세밀한 인용, 모델링을 한 제품 안에 넣은 사례. AI와 주식시장 파트와 연결된다.</p><span class="open">공식 발표 열기 ↗</span></a>
+</div>
+<h3 style="margin-top:28px">소셜에서 바로 보는 창구</h3>
+<p class="small">Threads·Instagram은 로그인·지역·크롤링 제한 때문에 개별 게시물 링크가 자주 바뀐다. 공식 계정과 공개 사례 페이지를 함께 둔다.</p>
+<div class="socialstrip">
+<a href="https://www.threads.com/@openai" target="_blank" rel="noopener">OpenAI on Threads ↗</a>
+<a href="https://www.instagram.com/openai/" target="_blank" rel="noopener">OpenAI on Instagram ↗</a>
+<a href="https://www.linkedin.com/posts/diksha-151481167_diksha-tech-simplified-on-instagram-meta-activity-7481211325625339904-74fW" target="_blank" rel="noopener">Instagram의 Muse 활용 예시(미러) ↗</a>
+<a href="https://devday.openai.com/" target="_blank" rel="noopener">DevDay 2026 자료 ↗</a>
+</div>
+<div class="practice">
+<div class="label">실습 · 기사 하나로 수업 만들기</div>
+<h3>기술 뉴스의 사실·주장·사회적 쟁점을 분리한다</h3>
+<div class="prompt" id="pNewsClaim">아래 2026년 AI 기사 또는 공식 발표를 분석해줘.
+
+[기사 내용 또는 URL]
+
+다섯 칸으로 나눠줘.
+1. 확인 가능한 사실
+2. 회사나 기자의 해석·주장
+3. 아직 검증되지 않은 성능·효율 주장
+4. 학교 수업과 연결할 수 있는 질문
+5. 학생이 추가로 찾아봐야 할 반대 근거나 다른 자료
+
+마지막에 “이 기사만 읽고 단정하면 안 되는 것”을 3개 적어줘.<button class="copy" data-copy="pNewsClaim">복사</button></div>
+</div>
+</section>
+
+<section id="stocks26">
+<div class="kicker">AI × MARKET · 2026</div>
+<h2>AI를 주식시장으로 읽으면 기술의 ‘병목’과 ‘돈의 흐름’이 보인다</h2>
+<p class="lead">매수 종목을 고르는 시간이 아니다. <b>모델 → 반도체 → 메모리 → 데이터센터 → 전력 → 서비스 수익화</b>로 이어지는 산업 구조를 읽는다. 기술 뉴스가 기업의 매출·CAPEX·현금흐름·밸류에이션으로 어떻게 연결되는지 살펴본다.</p>
+<div class="flow" style="margin-top:22px">
+<div class="step">AI 서비스<br/><span class="small">사용량·수익화</span></div><div class="arrow">→</div>
+<div class="step">가속기<br/><span class="small">GPU·ASIC</span></div><div class="arrow">→</div>
+<div class="step">메모리<br/><span class="small">HBM·DRAM</span></div><div class="arrow">→</div>
+<div class="step">데이터센터<br/><span class="small">서버·냉각·네트워크</span></div><div class="arrow">→</div>
+<div class="step">전력<br/><span class="small">발전·송전·변압기</span></div>
+</div>
+<div class="grid3" style="margin-top:20px">
+<div class="card blue"><span class="tag">CAPEX</span><h3>빅테크는 소프트웨어 회사인데 왜 이렇게 많은 설비투자를 하나</h3><p>FT는 Google·Amazon·Microsoft·Meta가 AI 붐이 시작된 2023년 이후 누적 1.1조 달러 이상을 투자했고, 2026년 계획만 약 7,450억 달러라고 보도했다. AI 경쟁이 자본집약 산업으로 변하고 있다는 신호다.</p></div>
+<div class="card purple"><span class="tag">GPU → MEMORY</span><h3>AI 트레이드의 중심은 한 종목에 고정되지 않는다</h3><p>Bloomberg는 2026년 7월 Nvidia가 두 달도 안 돼 약 1조 달러의 시가총액을 잃는 동안 투자자 관심 일부가 메모리 반도체로 이동했다고 보도했다. 기술 리더십과 주가 흐름은 같은 개념이 아니다.</p></div>
+<div class="card green"><span class="tag">HBM4</span><h3>모델이 커질수록 메모리가 병목이 된다</h3><p>SK hynix는 2026년 2분기 기록적인 실적과 HBM4 출하를 발표했다. SEMI는 AI 수요로 300mm 메모리 장비 투자가 2026년 520억 달러를 넘어설 것으로 전망했다.</p></div>
+<div class="card amber"><span class="tag">POWER</span><h3>AI 주식 이야기가 전력·냉각·변압기로 번지는 이유</h3><p>IEA는 대형 기술기업 5곳의 CAPEX가 2025년 4,000억 달러를 넘고 2026년에는 추가로 75% 증가할 것으로 봤다. AI 전용 데이터센터의 전력 밀도와 계통 병목이 새로운 제약 조건이 된다.</p></div>
+<div class="card red"><span class="tag">MARKET BREADTH</span><h3>지수가 오르는 것과 대부분의 주식이 오르는 것은 다르다</h3><p>9월 30일 MarketWatch는 S&amp;P 500이 고점 부근인데도 40%가 넘는 구성 종목이 52주 고점 대비 20% 이상 하락해 있다고 짚었다. 몇몇 AI 대형주의 비중이 지수 체감을 바꿀 수 있다.</p></div>
+<div class="card cyan"><span class="tag">MONETIZATION</span><h3>CAPEX가 커질수록 질문은 “AI가 좋은가”에서 “돈을 버는가”로</h3><p>인프라 투자가 빠르게 커질 때 자유현금흐름과 수익화 속도가 함께 중요해진다. 기술 전망과 투자 판단을 분리해서 보는 연습이 필요하다.</p></div>
+</div>
+<div class="linkgrid">
+<a class="linkcard" href="https://www.ft.com/content/dcf3873e-7b32-4a24-a90d-3bccf1d2c996" target="_blank" rel="noopener"><div class="source">Financial Times · 2026</div><h3>Big Tech AI spending spree tops $1tn</h3><p>AI가 ‘소프트웨어 혁신’이면서 동시에 거대한 설비투자 사이클이라는 점을 보여준다.</p><span class="open">기사 열기 ↗</span></a>
+<a class="linkcard" href="https://www.iea.org/reports/key-questions-on-energy-and-ai/executive-summary" target="_blank" rel="noopener"><div class="source">IEA · 2026</div><h3>Key Questions on Energy and AI</h3><p>전력수요·데이터센터·AI factory를 산업 구조와 연결하는 데 좋은 공공 자료.</p><span class="open">보고서 열기 ↗</span></a>
+<a class="linkcard" href="https://www.bloomberg.com/news/articles/2026-07-08/nvidia-s-1-trillion-slide-sends-valuation-to-pre-ai-boom-levels" target="_blank" rel="noopener"><div class="source">Bloomberg · 2026-07-08</div><h3>Nvidia의 1조 달러 시총 감소와 AI 트레이드 순환</h3><p>좋은 기업·좋은 기술과 주가의 가격·기대 수준을 구분하는 사례.</p><span class="open">기사 열기 ↗</span></a>
+<a class="linkcard" href="https://news.skhynix.com/en/q2-2026-business-results/" target="_blank" rel="noopener"><div class="source">SK hynix · 2026-07-29</div><h3>HBM4와 AI 메모리 수요</h3><p>기업 발표 자료이므로 회사 관점을 감안해 읽되, 메모리 병목과 장기계약 구조를 확인하기 좋다.</p><span class="open">회사 발표 열기 ↗</span></a>
+<a class="linkcard" href="https://www.semi.org/en/semi-press-release/semi-projects-300mm-memory-equipment-investment-to-surpass-50-billion-dollars-in-2026" target="_blank" rel="noopener"><div class="source">SEMI · 2026-06-29</div><h3>메모리 장비 투자 520억 달러 전망</h3><p>HBM·DDR5·데이터 저장 수요가 장비투자로 어떻게 이어지는지 본다.</p><span class="open">산업 자료 열기 ↗</span></a>
+<a class="linkcard" href="https://www.marketwatch.com/story/you-might-be-shocked-by-how-many-stocks-are-in-a-bear-market-right-now-017c9cd8" target="_blank" rel="noopener"><div class="source">MarketWatch · 2026-09-30</div><h3>AI 대형주와 시장 폭(market breadth)</h3><p>지수 상승이 전체 시장 상승과 동일하지 않다는 최신 사례.</p><span class="open">기사 열기 ↗</span></a>
+</div>
+<div class="practice">
+<div class="label">실습 · AI 산업 지도를 투자 언어로 번역</div>
+<h3>기술 뉴스 하나가 어느 기업의 어떤 숫자로 이어지는가</h3>
+<div class="prompt" id="pStockMap">다음 AI 뉴스를 투자 추천이 아니라 산업 구조 분석으로 바꿔줘.
+
+[기사 또는 기술 변화]
+
+아래 순서로 정리해.
+1. 직접 수혜/비용 증가가 발생하는 산업
+2. 2차 병목이 생길 수 있는 산업 — 메모리, 패키징, 네트워크, 냉각, 전력 등
+3. 확인해야 할 재무 숫자 — 매출 성장, 영업이익률, CAPEX, FCF, 재고, 수주 등
+4. 기술적으로 좋아도 주가가 하락할 수 있는 이유
+5. 반대로 뉴스가 좋지 않아도 기업가치가 유지될 수 있는 이유
+6. 이 주장을 검증할 1차 자료 — 기업 실적발표, SEC 공시, 산업협회, 에너지기관 등
+
+마지막에는 “이 뉴스만으로 매수·매도를 판단할 수 없는 이유”를 써줘.<button class="copy" data-copy="pStockMap">복사</button></div>
+</div>
+<div class="callout"><strong>경제·사회 수업으로 연결</strong><br/>AI 뉴스 하나를 고른 뒤 기술적 변화 → 공급망 → 기업 재무 → 주가 기대 → 사회적 비용까지 연결하면 데이터 읽기, 주장 검증, 확률적 판단을 함께 다룰 수 있다.</div>
 </section>
 <section id="task">
 <div class="kicker">TASK DESIGN</div>
@@ -547,67 +656,6 @@ HTML, CSS, JavaScript를 한 파일에 넣어줘.
 개념:
 [여기에 개념 설명]<button class="copy" data-copy="pConceptApp">복사</button></div>
 </div>
-</section>
-<section id="algorithms">
-<div class="kicker">INTERACTIVE CONCEPT LAB</div>
-<h2>알고리즘을 직접 움직여 본다</h2>
-<div class="lab" id="markovLab">
-<h3>마르코프 체인 · 상태 사이의 이동 확률</h3>
-<p>맑음일 때 다음 날이 맑음 70%, 흐림 20%, 비 10%라고 가정한다. 현재 상태와 이동 확률만으로 연속된 날씨를 생성해 본다.</p>
-<div class="labgrid">
-<div>
-<div class="inputrow"><label>현재 상태</label><select id="markovState"><option>맑음</option><option>흐림</option><option>비</option></select></div>
-<div class="inputrow"><label>맑음 → 맑음</label><input id="mSS" max="100" min="0" type="range" value="70"/><span id="mSSv">70%</span></div>
-<div class="inputrow"><label>맑음 → 흐림</label><input id="mSC" max="100" min="0" type="range" value="20"/><span id="mSCv">20%</span></div>
-<div class="inputrow"><label>맑음 → 비</label><input id="mSR" max="100" min="0" type="range" value="10"/><span id="mSRv">10%</span></div>
-<button id="markovOne">다음 상태</button> <button class="secondary" id="markovTen">10번 생성</button>
-</div>
-<div class="screen" id="markovScreen">맑음</div>
-</div>
-<p class="small">생각할 점: 이동 확률의 합이 100이 아니면 어떻게 처리할 것인가? 이전 상태 두 개를 함께 참고한다면 데이터와 상태의 수는 어떻게 달라질까?</p>
-</div>
-<div class="lab" id="gaLab">
-<h3>유전 알고리즘 · 좋은 후보를 남기고 변형한다</h3>
-<p>목표 문자열과 더 많이 일치하는 후보를 선택하고, 교배와 돌연변이를 반복한다. ‘좋음’을 무엇으로 정의하느냐가 결과를 결정한다.</p>
-<div class="labgrid">
-<div>
-<div class="inputrow"><label>목표</label><input id="gaTarget" value="CODE"/></div>
-<div class="inputrow"><label>개체 수</label><input id="gaPop" max="240" min="20" step="20" type="range" value="100"/><span id="gaPopV">100</span></div>
-<div class="inputrow"><label>돌연변이</label><input id="gaMut" max="40" min="1" type="range" value="8"/><span id="gaMutV">8%</span></div>
-<button id="gaStart">진화 시작</button> <button class="secondary" id="gaReset">초기화</button>
-</div>
-<div class="screen" id="gaScreen">목표: CODE\n준비됨</div>
-</div>
-<p class="small">생각할 점: 적합도 함수를 ‘일치 문자 수’가 아니라 속도·비용·안전까지 함께 고려하도록 바꾸면 어떤 해가 살아남을까?</p>
-</div>
-<div class="lab" id="knnLab">
-<h3>k-NN · ‘가깝다’의 정의가 분류를 바꾼다</h3>
-<p>캔버스를 클릭해 새 점을 놓는다. 가장 가까운 k개의 이웃을 보고 어느 집단에 가까운지 확인한다.</p>
-<div class="labgrid">
-<div>
-<canvas height="330" id="knnCanvas" style="width:100%;background:#fff;border-radius:12px" width="520"></canvas>
-</div>
-<div>
-<div class="inputrow"><label>k</label><input id="knnK" max="9" min="1" step="2" type="range" value="3"/><span id="knnKV">3</span></div>
-<button id="knnRandom">데이터 다시 만들기</button>
-<div class="screen" id="knnScreen">캔버스를 클릭해 새 점을 놓으세요.</div>
-<p class="small">특징마다 값의 범위가 다르면 큰 숫자 범위를 가진 특징이 거리를 지배할 수 있다. ‘비슷함’을 어떤 특징으로 계산할지 먼저 정해야 한다.</p>
-</div>
-</div>
-</div>
-<div class="lab" id="nbLab">
-<h3>Naive Bayes · 단어가 나타날 확률을 합쳐 분류한다</h3>
-<p>간단한 장난감 데이터에서 ‘무료·당첨·클릭·이벤트’는 스팸 쪽에서 더 자주, ‘회의·자료·수업·일정’은 일반 메일 쪽에서 더 자주 등장한다고 가정한다.</p>
-<div class="labgrid">
-<div>
-<textarea class="notearea" id="nbText" placeholder="예: 무료 이벤트 당첨 링크를 클릭하세요" style="min-height:120px">무료 이벤트 당첨 링크를 클릭하세요</textarea>
-<button id="nbRun">분류하기</button>
-</div>
-<div class="screen" id="nbScreen">문장을 입력하고 분류하세요.</div>
-</div>
-<p class="small">생각할 점: 학습 데이터에 한 번도 없던 단어 때문에 전체 확률이 0이 되지 않게 하려면 보정이 필요하다. 특징을 많이 넣는다고 항상 좋아지는 것도 아니다.</p>
-</div>
-<div class="callout"><strong>앱을 만드는 순간 개념의 빈틈이 드러난다.</strong><br/>“k를 몇으로 둘까?”, “확률의 합이 100이 아니면?”, “적합도는 무엇인가?”, “처음 보는 단어는?” 같은 질문이 설명을 다시 읽게 만든다.</div>
 </section>
 <section id="subjects">
 <div class="kicker">SUBJECT DESIGN</div>
@@ -1094,6 +1142,74 @@ E. 개인정보·저작권·정확성 때문에 주의할 점
 </div>
 </section>
 <div class="footer">브라우저 입력 내용은 현재 기기의 로컬 저장소에 자동 저장된다. 학생 개인정보·성적·생활기록 등 민감한 정보는 외부 AI 서비스에 입력하기 전에 기관 지침과 서비스의 데이터 처리 조건을 확인한다.</div>
+
+<section class="hero" id="algorithm-finale">
+<div class="kicker">FINAL LAB · CLASSIC MACHINE LEARNING</div>
+<h2>마지막은 직접 움직여보는 네 가지 알고리즘</h2>
+<p class="lead">최신 AI 뉴스와 에이전트까지 살펴본 뒤, 마지막에는 다시 기본 원리로 돌아온다. <b>마르코프 체인 → 유전 알고리즘 → k-NN → Naive Bayes</b>를 조작하면서 “AI가 무엇을 근거로 다음 상태·후보·이웃·확률을 결정하는가”를 비교한다.</p>
+<div class="quote">복잡한 최신 AI도 결국 상태를 표현하고, 후보를 만들고, 평가하고, 선택하고, 검증하는 계산의 연쇄로 볼 수 있다.</div>
+</section>
+<section id="algorithms">
+<div class="kicker">INTERACTIVE CONCEPT LAB</div>
+<h2>알고리즘을 직접 움직여 본다</h2>
+<div class="lab" id="markovLab">
+<h3>마르코프 체인 · 상태 사이의 이동 확률</h3>
+<p>맑음일 때 다음 날이 맑음 70%, 흐림 20%, 비 10%라고 가정한다. 현재 상태와 이동 확률만으로 연속된 날씨를 생성해 본다.</p>
+<div class="labgrid">
+<div>
+<div class="inputrow"><label>현재 상태</label><select id="markovState"><option>맑음</option><option>흐림</option><option>비</option></select></div>
+<div class="inputrow"><label>맑음 → 맑음</label><input id="mSS" max="100" min="0" type="range" value="70"/><span id="mSSv">70%</span></div>
+<div class="inputrow"><label>맑음 → 흐림</label><input id="mSC" max="100" min="0" type="range" value="20"/><span id="mSCv">20%</span></div>
+<div class="inputrow"><label>맑음 → 비</label><input id="mSR" max="100" min="0" type="range" value="10"/><span id="mSRv">10%</span></div>
+<button id="markovOne">다음 상태</button> <button class="secondary" id="markovTen">10번 생성</button>
+</div>
+<div class="screen" id="markovScreen">맑음</div>
+</div>
+<p class="small">생각할 점: 이동 확률의 합이 100이 아니면 어떻게 처리할 것인가? 이전 상태 두 개를 함께 참고한다면 데이터와 상태의 수는 어떻게 달라질까?</p>
+</div>
+<div class="lab" id="gaLab">
+<h3>유전 알고리즘 · 좋은 후보를 남기고 변형한다</h3>
+<p>목표 문자열과 더 많이 일치하는 후보를 선택하고, 교배와 돌연변이를 반복한다. ‘좋음’을 무엇으로 정의하느냐가 결과를 결정한다.</p>
+<div class="labgrid">
+<div>
+<div class="inputrow"><label>목표</label><input id="gaTarget" value="CODE"/></div>
+<div class="inputrow"><label>개체 수</label><input id="gaPop" max="240" min="20" step="20" type="range" value="100"/><span id="gaPopV">100</span></div>
+<div class="inputrow"><label>돌연변이</label><input id="gaMut" max="40" min="1" type="range" value="8"/><span id="gaMutV">8%</span></div>
+<button id="gaStart">진화 시작</button> <button class="secondary" id="gaReset">초기화</button>
+</div>
+<div class="screen" id="gaScreen">목표: CODE\n준비됨</div>
+</div>
+<p class="small">생각할 점: 적합도 함수를 ‘일치 문자 수’가 아니라 속도·비용·안전까지 함께 고려하도록 바꾸면 어떤 해가 살아남을까?</p>
+</div>
+<div class="lab" id="knnLab">
+<h3>k-NN · ‘가깝다’의 정의가 분류를 바꾼다</h3>
+<p>캔버스를 클릭해 새 점을 놓는다. 가장 가까운 k개의 이웃을 보고 어느 집단에 가까운지 확인한다.</p>
+<div class="labgrid">
+<div>
+<canvas height="330" id="knnCanvas" style="width:100%;background:#fff;border-radius:12px" width="520"></canvas>
+</div>
+<div>
+<div class="inputrow"><label>k</label><input id="knnK" max="9" min="1" step="2" type="range" value="3"/><span id="knnKV">3</span></div>
+<button id="knnRandom">데이터 다시 만들기</button>
+<div class="screen" id="knnScreen">캔버스를 클릭해 새 점을 놓으세요.</div>
+<p class="small">특징마다 값의 범위가 다르면 큰 숫자 범위를 가진 특징이 거리를 지배할 수 있다. ‘비슷함’을 어떤 특징으로 계산할지 먼저 정해야 한다.</p>
+</div>
+</div>
+</div>
+<div class="lab" id="nbLab">
+<h3>Naive Bayes · 단어가 나타날 확률을 합쳐 분류한다</h3>
+<p>간단한 장난감 데이터에서 ‘무료·당첨·클릭·이벤트’는 스팸 쪽에서 더 자주, ‘회의·자료·수업·일정’은 일반 메일 쪽에서 더 자주 등장한다고 가정한다.</p>
+<div class="labgrid">
+<div>
+<textarea class="notearea" id="nbText" placeholder="예: 무료 이벤트 당첨 링크를 클릭하세요" style="min-height:120px">무료 이벤트 당첨 링크를 클릭하세요</textarea>
+<button id="nbRun">분류하기</button>
+</div>
+<div class="screen" id="nbScreen">문장을 입력하고 분류하세요.</div>
+</div>
+<p class="small">생각할 점: 학습 데이터에 한 번도 없던 단어 때문에 전체 확률이 0이 되지 않게 하려면 보정이 필요하다. 특징을 많이 넣는다고 항상 좋아지는 것도 아니다.</p>
+</div>
+<div class="callout"><strong>앱을 만드는 순간 개념의 빈틈이 드러난다.</strong><br/>“k를 몇으로 둘까?”, “확률의 합이 100이 아니면?”, “적합도는 무엇인가?”, “처음 보는 단어는?” 같은 질문이 설명을 다시 읽게 만든다.</div>
+</section>
 </main>
 </div><script>
 const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
